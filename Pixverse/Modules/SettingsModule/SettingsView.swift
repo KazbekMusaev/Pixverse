@@ -21,11 +21,22 @@ final class SettingsView: UIViewController {
         presenter?.viewDidLoaded()
     }
     
-
     //MARK: - Functions
-    
+    private func settupView() {
+        view.backgroundColor = .background
+        
+        view.addSubview(navBar)
+        
+        NSLayoutConstraint.activate([
+            navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
+            
+        ])
+    }
     
     //MARK: - View elements
+    private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Settings")
     
     
     //MARK: - Actions
@@ -34,6 +45,6 @@ final class SettingsView: UIViewController {
 
 extension SettingsView: SettingsViewProtocol {
     func showInformations() {
-        print("SettingsView -> show informations")
+        settupView()
     }
 }

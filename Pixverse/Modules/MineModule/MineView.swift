@@ -21,10 +21,22 @@ final class MineView: UIViewController {
         presenter?.viewDidLoaded()
     }
     
-
     //MARK: - Functions
+    private func settupView() {
+        view.backgroundColor = .background
+        
+        view.addSubview(navBar)
+        
+        NSLayoutConstraint.activate([
+            navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
+            
+        ])
+    }
     
     //MARK: - View elements
+    private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Mine")
     
     //MARK: - Actions
 
@@ -32,6 +44,6 @@ final class MineView: UIViewController {
 
 extension MineView: MineViewProtocol {
     func showInformations() {
-        print("MineView -> show informations")
+        settupView()
     }
 }

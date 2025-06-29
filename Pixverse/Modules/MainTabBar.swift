@@ -22,10 +22,7 @@ final class MainTabBar: UITabBarController {
         settingsVC.tabBarItem.image = UIImage(named: "gearshape")
         tabBar.backgroundColor = .background
         
-        let topBorder = UIView()
-        topBorder.translatesAutoresizingMaskIntoConstraints = false
-        topBorder.heightAnchor.constraint(equalToConstant: 0.33).isActive = true
-        topBorder.backgroundColor = .white.withAlphaComponent(0.16)
+        let topBorder = ComponentBuilder.getDivider()
         
         tabBar.addSubview(topBorder)
         
@@ -35,7 +32,7 @@ final class MainTabBar: UITabBarController {
             topBorder.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor)
         ])
         
-        tabBar.tintColor = .accent
+        tabBar.tintColor = .accentPrimary
         tabBar.unselectedItemTintColor = .labelQuaternary
         
         viewControllers = [createVC, mineVC, settingsVC]

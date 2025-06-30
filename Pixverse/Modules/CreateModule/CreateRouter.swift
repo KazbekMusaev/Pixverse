@@ -8,10 +8,35 @@
 import UIKit
 
 protocol CreateRouterProtocol: AnyObject {
-    
+    func pushToTextToVideo()
+    func pushToImgAndTextToVideo()
+    func pushToSeeAll(_ model: [TemplatesModel])
+    func pushToEffect(model: TemplatesModel)
 }
 
 final class CreateRouter: CreateRouterProtocol {
+    func pushToEffect(model: TemplatesModel) {
+        let vc = EffectRouter.build(model)
+        viewController?.navigationController?.pushViewController(vc, animated: true)
+        TabBarManager.shared.hide()
+    }
+    
+    func pushToSeeAll(_ model: [TemplatesModel]) {
+        let vc = SeeAllEffectsRouter.build()
+        viewController?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func pushToImgAndTextToVideo() {
+        let vc = ImgAndTextToVideoRouter.build()
+        viewController?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    func pushToTextToVideo() {
+        let vc = TextToVideoRouter.build()
+        viewController?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     weak var viewController: CreateView?
     weak var presenter: CreatePresenterProtocol?
@@ -32,10 +57,9 @@ final class CreateRouter: CreateRouterProtocol {
         router.viewController = viewController
         
         let navController = UINavigationController(rootViewController: viewController)
+        navController.navigationBar.isHidden = true
         
         return navController
     }
-
-
     
 }

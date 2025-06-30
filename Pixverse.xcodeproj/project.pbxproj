@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		18182E3F2E12A66600A33130 /* GSPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 18182E3E2E12A66600A33130 /* GSPlayer */; };
+		18182E4F2E12B9BF00A33130 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 18182E4E2E12B9BF00A33130 /* RxCocoa */; };
+		18182E512E12B9BF00A33130 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 18182E502E12B9BF00A33130 /* RxSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		18182D252E0FF93200A33130 /* Pixverse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pixverse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18182E512E12B9BF00A33130 /* RxSwift in Frameworks */,
+				18182E4F2E12B9BF00A33130 /* RxCocoa in Frameworks */,
+				18182E3F2E12A66600A33130 /* GSPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = Pixverse;
 			packageProductDependencies = (
+				18182E3E2E12A66600A33130 /* GSPlayer */,
+				18182E4E2E12B9BF00A33130 /* RxCocoa */,
+				18182E502E12B9BF00A33130 /* RxSwift */,
 			);
 			productName = Pixverse;
 			productReference = 18182D252E0FF93200A33130 /* Pixverse.app */;
@@ -107,6 +119,10 @@
 			);
 			mainGroup = 18182D1C2E0FF93200A33130;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				18182E3D2E12A66600A33130 /* XCRemoteSwiftPackageReference "GSPlayer" */,
+				18182E4D2E12B9BF00A33130 /* XCRemoteSwiftPackageReference "RxSwift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 18182D262E0FF93200A33130 /* Products */;
 			projectDirPath = "";
@@ -343,6 +359,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		18182E3D2E12A66600A33130 /* XCRemoteSwiftPackageReference "GSPlayer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wxxsw/GSPlayer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.29;
+			};
+		};
+		18182E4D2E12B9BF00A33130 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		18182E3E2E12A66600A33130 /* GSPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18182E3D2E12A66600A33130 /* XCRemoteSwiftPackageReference "GSPlayer" */;
+			productName = GSPlayer;
+		};
+		18182E4E2E12B9BF00A33130 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18182E4D2E12B9BF00A33130 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		18182E502E12B9BF00A33130 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18182E4D2E12B9BF00A33130 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 18182D1D2E0FF93200A33130 /* Project object */;
 }

@@ -13,11 +13,12 @@ protocol MineRouterProtocol: AnyObject {
 
 final class MineRouter: MineRouterProtocol {
     
+    weak var viewController: MineView?
     weak var presenter: MinePresenterProtocol?
     
     
     //MARK: - ModuleBuilder
-    static func build() -> UIViewController {
+    static func build() -> UINavigationController {
         let viewController = MineView()
         let interactor = MineInteractor()
         let router = MineRouter()
@@ -28,7 +29,11 @@ final class MineRouter: MineRouterProtocol {
         presenter.view = viewController
         interactor.presenter = presenter
         router.presenter = presenter
+        router.viewController = viewController
         
-        return viewController
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.navigationBar.isHidden = true
+        
+        return navController
     }
 }

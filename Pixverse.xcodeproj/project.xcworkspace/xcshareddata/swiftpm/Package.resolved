@@ -1,0 +1,24 @@
+{
+  "originHash" : "9769601cea899fdf647bb31268b3968170600b30baf9af0ec70e0ed131658baa",
+  "pins" : [
+    {
+      "identity" : "gsplayer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wxxsw/GSPlayer.git",
+      "state" : {
+        "revision" : "49ebb0fe4cacfcdedc04c3c2fa3ed3c15c9249a4",
+        "version" : "0.2.29"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift.git",
+      "state" : {
+        "revision" : "5dd1907d64f0d36f158f61a466bab75067224893",
+        "version" : "6.9.0"
+      }
+    }
+  ],
+  "version" : 3
+}

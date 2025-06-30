@@ -11,6 +11,12 @@ protocol EffectPresenterProtocol: AnyObject {
     func viewDidLoaded()
     func touchToPopVCBtn()
     func touchToContinueBtn()
+    
+    func imageIsSelect(templateId: String, image: Data)
+    func getSuccessResponse()
+    func getError(errorText: String)
+    
+    func videoGenerationCompleted(_ videoUrl: String)
 }
 
 final class EffectPresenter {
@@ -28,6 +34,28 @@ final class EffectPresenter {
 }
 
 extension EffectPresenter: EffectPresenterProtocol {
+    func videoGenerationCompleted(_ videoUrl: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.router.pushToResult(videoUrl)
+            self?.view?.stopCreatingAnimations()
+        }
+    }
+    
+    func getSuccessResponse() {
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.showCreatingAnimations()
+        }
+        interactor.loadVideoGenerateStatus()
+    }
+    
+    func getError(errorText: String) {
+        print(errorText)
+    }
+    
+    func imageIsSelect(templateId: String, image: Data) {
+        interactor.loadData(templateId: templateId, image: image)
+    }
+    
     func touchToContinueBtn() {
         router.presentAddPhotoHelper()
     }

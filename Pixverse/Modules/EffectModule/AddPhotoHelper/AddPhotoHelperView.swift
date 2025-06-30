@@ -73,7 +73,7 @@ final class AddPhotoHelperView: UIViewController {
         ])
     }
     
-    private func getPhotoView(name: String) -> UIImageView {
+    private func getPhotoView(name: String, isBadPhoto: Bool) -> UIImageView {
         let imgView = UIImageView()
         
         imgView.translatesAutoresizingMaskIntoConstraints = false
@@ -85,6 +85,22 @@ final class AddPhotoHelperView: UIViewController {
         
         imgView.widthAnchor.constraint(equalToConstant: (view.frame.width - 43) / 2).isActive = true
         imgView.heightAnchor.constraint(equalToConstant: (view.frame.width - 43) / 2).isActive = true
+        
+        let iconBadOrGood = UIImageView()
+        iconBadOrGood.translatesAutoresizingMaskIntoConstraints = false
+        iconBadOrGood.image = UIImage(systemName: isBadPhoto ? "xmark.circle.fill" : "checkmark.circle.fill")
+        iconBadOrGood.tintColor = isBadPhoto ? .accentRed : .accentGreen
+        iconBadOrGood.contentMode = .scaleAspectFit
+        iconBadOrGood.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        iconBadOrGood.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        
+        imgView.addSubview(iconBadOrGood)
+        
+        NSLayoutConstraint.activate([
+            iconBadOrGood.trailingAnchor.constraint(equalTo: imgView.trailingAnchor, constant: -14),
+            iconBadOrGood.bottomAnchor.constraint(equalTo: imgView.bottomAnchor, constant: -14)
+        ])
+        
         return imgView
     }
     
@@ -110,8 +126,8 @@ final class AddPhotoHelperView: UIViewController {
         $0.axis = .horizontal
         $0.spacing = 11
         
-        let badPhotoOne = getPhotoView(name: "badExample1")
-        let badPhotoTwo = getPhotoView(name: "badExample2")
+        let badPhotoOne = getPhotoView(name: "badExample1", isBadPhoto: true)
+        let badPhotoTwo = getPhotoView(name: "badExample2", isBadPhoto: true)
         
         $0.addArrangedSubview(badPhotoOne)
         $0.addArrangedSubview(badPhotoTwo)
@@ -128,8 +144,8 @@ final class AddPhotoHelperView: UIViewController {
         $0.axis = .horizontal
         $0.spacing = 11
         
-        let goodPhotoOne = getPhotoView(name: "goodExample1")
-        let goodPhotoTwo = getPhotoView(name: "goodExample2")
+        let goodPhotoOne = getPhotoView(name: "goodExample1", isBadPhoto: false)
+        let goodPhotoTwo = getPhotoView(name: "goodExample2", isBadPhoto: false)
         
         $0.addArrangedSubview(goodPhotoOne)
         $0.addArrangedSubview(goodPhotoTwo)
@@ -145,8 +161,6 @@ final class AddPhotoHelperView: UIViewController {
     
     private lazy var fromTheGalleryBtn: UIButton = {
         let btn = ComponentBuilder.getCustomBtn(action: fromTheGalleryAction, text: "From the gallery", textColor: .accentSecondaryDark)
-//        btn.backgroundColor = .accentSecondary
-        //Тут не ставится градиент, потом вернусь к этому
         DispatchQueue.main.async {
             btn.addHorizontalGradient(colors: [.accentPrimary, .accentSecondary])
         }
@@ -159,11 +173,15 @@ final class AddPhotoHelperView: UIViewController {
     private lazy var takeAPhotoAction = UIAction { [weak self] _ in
         guard let self else { return }
         self.takeAPhotoBtn.clickAnimate()
+        self.dismiss(animated: true)
+        self.delegate?.showImagePicker(mediaType: .camera)
     }
     
     private lazy var fromTheGalleryAction = UIAction { [weak self] _ in
         guard let self else { return }
         self.fromTheGalleryBtn.clickAnimate()
+        self.dismiss(animated: true)
+        self.delegate?.showImagePicker(mediaType: .gallery)
     }
 
 }

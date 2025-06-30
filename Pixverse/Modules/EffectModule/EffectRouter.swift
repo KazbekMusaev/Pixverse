@@ -10,25 +10,14 @@ import UIKit
 protocol EffectRouterProtocol: AnyObject {
     func popVC()
     func presentAddPhotoHelper()
+    func pushToResult(_ videoUrl: String)
 }
 
 final class EffectRouter: EffectRouterProtocol {
-    func presentAddPhotoHelper() {
-        let vc = AddPhotoHelperView()
-        vc.delegate = view
-        
-        vc.modalPresentationStyle = .formSheet
-        vc.modalTransitionStyle = .flipHorizontal
-        
-        
-        view?.present(vc, animated: true)
+    func pushToResult(_ videoUrl: String) {
+        let vc = TemplatesResultRouter.build(videoUrl, delegate: self)
+        view?.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func popVC() {
-        view?.navigationController?.popViewController(animated: true)
-        TabBarManager.shared.show()
-    }
-    
     
     weak var view: EffectView?
     weak var presenter: EffectPresenterProtocol?
@@ -49,5 +38,23 @@ final class EffectRouter: EffectRouterProtocol {
         
         
         return view
+    }
+    
+    func presentAddPhotoHelper() {
+        let vc = AddPhotoHelperView()
+        vc.delegate = view
+        
+        vc.modalPresentationStyle = .formSheet
+        vc.modalTransitionStyle = .flipHorizontal
+        
+        
+        view?.present(vc, animated: true)
+    }
+    
+    func popVC() {
+        TabBarManager.shared.show()
+        if let targetVC = view?.navigationController?.viewControllers.first(where: { $0 is CreateView }) {
+            view?.navigationController?.popToViewController(targetVC, animated: true)
+        }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  EffectView.swift
+//  TempatesResultView.swift
 //  Pixverse
 //
 //  Created by KazbekMusaev on 30.06.2025.
@@ -8,23 +8,14 @@
 import UIKit
 import GSPlayer
 
-protocol EffectViewProtocol: AnyObject {
-    func showInforamtion()
-    func showImagePicker(mediaType: MediaType)
-    func showCreatingAnimations()
-    func stopCreatingAnimations()
+protocol TemplatesResultViewProtocol: AnyObject {
+    func showInformation()
 }
 
-final class EffectView: UIViewController {
-    
-    var presenter: EffectPresenterProtocol?
-    var model: TemplatesModel?
-    
-    private lazy var imagePicker = ImagePickerManager(viewController: self) { [weak self] image in
-        guard let self, let image, let model else { return }
-        guard let data = image.jpegData(compressionQuality: 0.2) else { return }
-        presenter?.imageIsSelect(templateId: String(model.templateId), image: data)
-    }
+final class TemplatesResultView: UIViewController {
+
+    var presenter: TemplatesResultPresenterProtocol?
+    var videoURL: String?
     
     //MARK: - View life cycle
     override func viewDidLoad() {
@@ -32,17 +23,14 @@ final class EffectView: UIViewController {
         presenter?.viewDidLoaded()
     }
     
-    deinit {
-        TabBarManager.shared.show()
-    }
-    
+
     //MARK: - Functions
     private func settupView() {
         view.backgroundColor = .background
         
         view.addSubview(navBar)
         view.addSubview(videoPlayerView)
-        view.addSubview(continueBtn)
+        view.addSubview(saveBtn)
         
         NSLayoutConstraint.activate([
             navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -54,37 +42,32 @@ final class EffectView: UIViewController {
             videoPlayerView.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 40),
             videoPlayerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90),
             
-            continueBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            continueBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            continueBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            saveBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            saveBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
+        
     }
     
-//    private func setupVideoPlayer() {
-//        guard let model = model, let url = URL(string: model.previewLarge) else { return }
-//        
-//        
-//        
-////        videoPlayerView.stateDidChanged = { [weak self] state in
-////            guard let self = self else { return }
-////            
-////            switch state {
-////            case .playing:
-////                self.isPlaying = true
-////                self.playBtn.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-////            case .paused:
-////                self.isPlaying = false
-////                self.playBtn.setImage(UIImage(systemName: "play.fill"), for: .normal)
-////            default:
-////                break
-////            }
-////        }
-//    }
-    
     //MARK: - View elements
-    lazy var creatingLoadView = CreatingVideoAnimateView()
-    
-    private lazy var navBar = ComponentBuilder.getCustomEmptyNavigationBar(title: model?.name ?? "", action: popVCAction)
+    private lazy var navBar: UIView = {
+        let view = ComponentBuilder.getCustomEmptyNavigationBar(title: "Result", action: popVCAction)
+        
+        let moreActionBtn = UIButton()
+        moreActionBtn.translatesAutoresizingMaskIntoConstraints = false
+        moreActionBtn.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+        moreActionBtn.tintColor = .accentPrimary
+        moreActionBtn.addTarget(self, action: #selector(showMenu(_:)), for: .touchUpInside)
+        
+        view.addSubview(moreActionBtn)
+        NSLayoutConstraint.activate([
+            moreActionBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            moreActionBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5),
+            moreActionBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 5),
+        ])
+        
+        return view
+    }()
     
     private lazy var videoPlayerView: VideoPlayerView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +83,7 @@ final class EffectView: UIViewController {
             playBtn.centerYAnchor.constraint(equalTo: $0.centerYAnchor),
         ])
         
-        if let model, let url = URL(string: model.previewLarge) {
+        if let videoURL, let url = URL(string: videoURL) {
             $0.play(for: url)
             $0.pause(reason: .userInteraction)
             playBtn.isHidden = false
@@ -108,7 +91,7 @@ final class EffectView: UIViewController {
         
         return $0
     }(VideoPlayerView())
-    
+
     private lazy var playBtn: UIButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(UIImage(systemName: "play.fill"), for: .normal)
@@ -121,25 +104,23 @@ final class EffectView: UIViewController {
         return $0
     }(UIButton(primaryAction: togglePlayAction))
     
-    private lazy var continueBtn: UIButton = {
-        let btn = ComponentBuilder.getCustomBtn(action: continueAction, text: "Continue")
+    private lazy var saveBtn: UIButton = {
+        let btn = ComponentBuilder.getCustomBtn(action: saveAction, text: "Save")
         DispatchQueue.main.async {
             btn.addHorizontalGradient(colors: [.accentPrimary, .accentSecondary])
         }
         return btn
     }()
     
-    
-    
     //MARK: - Actions
-    private lazy var continueAction = UIAction { [weak self] _ in
+    private lazy var saveAction = UIAction { [weak self] _ in
         guard let self else { return }
-        self.continueBtn.clickAnimate()
-        self.presenter?.touchToContinueBtn()
+        self.saveBtn.clickAnimate()
     }
     
     private lazy var popVCAction = UIAction { [weak self] _ in
-        self?.presenter?.touchToPopVCBtn()
+        guard let self else { return }
+        self.presenter?.touchToPopVCBtn()
     }
     
     private lazy var togglePlayAction = UIAction { [weak self] _ in
@@ -156,6 +137,22 @@ final class EffectView: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.playBtn.isHidden = true
         }
+    }
+    
+    @objc func showMenu(_ sender: UIButton) {
+        let items = [
+            EditMenuItem(title: "Share", image: UIImage(systemName: "pencil")) {
+                print("Редактировать tapped")
+            },
+            EditMenuItem(title: "Save to files", image: UIImage(systemName: "square.and.arrow.up")) {
+                print("Поделиться tapped")
+            },
+            EditMenuItem(title: "Delete", image: UIImage(systemName: "trash"), action: {
+                print("Удалить tapped")
+            }, isDestructive: true)
+        ]
+        
+        showEditMenu(for: sender, items: items)
     }
     
     //MARK: - Gesture
@@ -178,39 +175,14 @@ final class EffectView: UIViewController {
             self.playBtn.isHidden = true
         }
     }
+
+
 }
 
-extension EffectView: EffectViewProtocol {
-    func stopCreatingAnimations() {
-        creatingLoadView.removeFromSuperview()
-    }
-    
-    func showCreatingAnimations() {
-        creatingLoadView.action = { [weak self] in
-            self?.presenter?.touchToPopVCBtn()
-        }
-        creatingLoadView.settupView()
-        
-        view.addSubview(creatingLoadView)
-        
-        NSLayoutConstraint.activate([
-            creatingLoadView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            creatingLoadView.topAnchor.constraint(equalTo: view.topAnchor),
-            creatingLoadView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            creatingLoadView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-    
-    func showImagePicker(mediaType: MediaType) {
-        switch mediaType {
-        case .camera:
-            imagePicker.openCamera()
-        case .gallery:
-            imagePicker.openGallery()
-        }
-    }
-    
-    func showInforamtion() {
+extension TemplatesResultView: TemplatesResultViewProtocol {
+    func showInformation() {
         settupView()
     }
+    
+    
 }

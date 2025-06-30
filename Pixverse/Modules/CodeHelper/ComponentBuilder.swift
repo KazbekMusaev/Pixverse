@@ -175,4 +175,8 @@ final class ComponentBuilder {
          
         return btn
     }
+    
+    
+    ///Метод для получения алерта из 3х кнопок
+    
 }

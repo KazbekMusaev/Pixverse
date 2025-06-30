@@ -17,6 +17,8 @@ final class CreateView: UIViewController {
     var model: [TemplatesModel] = []
     var presenter: CreatePresenterProtocol?
     
+    private lazy var widthWithInsert = (view.frame.width - 48) / 2
+    
     //MARK: - View life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +38,7 @@ final class CreateView: UIViewController {
         view.backgroundColor = .background
         
         view.addSubview(navBar)
+        view.addSubview(letsCreateTitle)
         view.addSubview(textToVideoBtn)
         view.addSubview(imageAndTextToVideoBtn)
         view.addSubview(templatesCollectionView)
@@ -45,17 +48,21 @@ final class CreateView: UIViewController {
             navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
             
+            letsCreateTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            letsCreateTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            letsCreateTitle.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 16),
+            
             textToVideoBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            textToVideoBtn.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 53),
-            textToVideoBtn.widthAnchor.constraint(equalToConstant: (view.frame.width - 48) / 2),
+            textToVideoBtn.topAnchor.constraint(equalTo: letsCreateTitle.bottomAnchor, constant: 12),
+            textToVideoBtn.widthAnchor.constraint(equalToConstant: widthWithInsert),
             
             imageAndTextToVideoBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            imageAndTextToVideoBtn.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 53),
-            imageAndTextToVideoBtn.widthAnchor.constraint(equalToConstant: (view.frame.width - 48) / 2),
+            imageAndTextToVideoBtn.topAnchor.constraint(equalTo: letsCreateTitle.bottomAnchor, constant: 12),
+            imageAndTextToVideoBtn.widthAnchor.constraint(equalToConstant: widthWithInsert),
             
             templatesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             templatesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            templatesCollectionView.topAnchor.constraint(equalTo: textToVideoBtn.bottomAnchor, constant: 20),
+            templatesCollectionView.topAnchor.constraint(equalTo: imageAndTextToVideoBtn.bottomAnchor, constant: 12),
             templatesCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
@@ -63,9 +70,9 @@ final class CreateView: UIViewController {
     }
     
     private func createHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
-        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(32))
+        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(36))
         let layoutSectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        layoutSectionHeader.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        layoutSectionHeader.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0)
         
         return layoutSectionHeader
     }
@@ -84,7 +91,7 @@ final class CreateView: UIViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(190),
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(widthWithInsert + 16),
                                                heightDimension: .absolute(254))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
@@ -112,6 +119,8 @@ final class CreateView: UIViewController {
         btn.addAction(imageAndTextToVideoAction, for: .touchUpInside)
         return btn
     }()
+    
+    private lazy var letsCreateTitle = ComponentBuilder.getTitleForCreate(text: "Let’s start creating")
     
     //Тут я не знаю точно, как должно все скролиться из-за этого делал вначале так. Чтобы скролилась и коллекция и 2 верхние кнопки Let’s start creating.
 //    private lazy var contentView: UIView = {

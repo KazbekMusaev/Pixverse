@@ -25,14 +25,7 @@ final class TemplatesHeader: UICollectionReusableView {
     }
     
     //MARK: View elements
-    private lazy var headerLabel: UILabel = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textAlignment = .left
-        $0.textColor = .labelPrimary
-        $0.font = .systemFont(ofSize: 25, weight: .semibold) // SF PRO
-        $0.text = "Видео"
-        return $0
-    }(UILabel())
+    private lazy var headerLabel = ComponentBuilder.getTitleForCreate()
     
     private lazy var seeAllBtn: UIButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -82,7 +75,8 @@ final class TemplatesHeader: UICollectionReusableView {
             headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             seeAllBtn.trailingAnchor.constraint(equalTo: trailingAnchor),
-            seeAllBtn.centerYAnchor.constraint(equalTo: centerYAnchor)
+            seeAllBtn.topAnchor.constraint(equalTo: topAnchor),
+            seeAllBtn.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

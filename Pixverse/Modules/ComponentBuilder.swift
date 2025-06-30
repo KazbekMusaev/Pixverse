@@ -62,7 +62,6 @@ final class ComponentBuilder {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 70).isActive = true
         btn.layer.cornerRadius = 8
-        btn.backgroundColor = .red
         
         let sparklesImg = UIImageView(image: UIImage(named: isDark ? "sparklesDark" : "sparklesWithGradient"))
         sparklesImg.translatesAutoresizingMaskIntoConstraints = false
@@ -87,5 +86,16 @@ final class ComponentBuilder {
         ])
         
         return btn
+    }
+    
+    ///Метод для получения тайтла
+    static func getTitleForCreate(text: String = "") -> UILabel {
+        let title = UILabel()
+        title.text = text
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.textAlignment = .left
+        title.textColor = .labelPrimary
+        title.font = .systemFont(ofSize: 20, weight: .semibold) // SF PRO
+        return title
     }
 }

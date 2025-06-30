@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import GSPlayer
 
 final class TemplatesCell: UICollectionViewCell {
     
     static let reuseId = "TemplatesCell"
+    private var currentTaskID: UUID?
     
     //MARK: - Init
     override init(frame: CGRect) {
@@ -41,6 +43,33 @@ final class TemplatesCell: UICollectionViewCell {
         ])
     }
     
+    func configureCell(_ model: TemplatesModel) {
+        templateNameLabel.text = model.name
+        
+        if let taskID = currentTaskID {
+            VideoLoader.cancelTask(taskID)
+        }
+        
+        if let url = URL(string: model.previewSmall) {
+            currentTaskID = VideoLoader.loadThumbnail(for: url) { [weak self] image in
+                self?.previewImg.image = image
+                self?.indicator.stopAnimating()
+                self?.indicator.removeFromSuperview()
+            }
+        }
+        
+        
+        
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        previewImg.image = nil
+        if let taskID = currentTaskID {
+            VideoLoader.cancelTask(taskID)
+        }
+    }
+    
     //MARK: - View elements
     private lazy var previewImg: UIImageView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +77,12 @@ final class TemplatesCell: UICollectionViewCell {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         
-        $0.image = UIImage(named: "testImg")
+        $0.addSubview(indicator)
+        
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: $0.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: $0.centerYAnchor)
+        ])
         
         return $0
     }(UIImageView())
@@ -56,8 +90,9 @@ final class TemplatesCell: UICollectionViewCell {
     private lazy var templateNameLabel: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .labelPrimary
-        $0.text = "Crumble it"
         return $0
     }(UILabel())
+    
+    private lazy var indicator = UIActivityIndicatorView.getIndicator()
     
 }

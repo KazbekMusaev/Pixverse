@@ -13,11 +13,12 @@ protocol SettingsRouterProtocol: AnyObject {
 
 final class SettingsRouter: SettingsRouterProtocol {
     
+    weak var viewController: SettingsView?
     weak var presenter: SettingsPresenterProtocol?
     
     
     //MARK: - ModuleBuilder
-    static func build() -> UIViewController {
+    static func build() -> UINavigationController {
         let viewController = SettingsView()
         let interactor = SettingsInteractor()
         let router = SettingsRouter()
@@ -28,7 +29,11 @@ final class SettingsRouter: SettingsRouterProtocol {
         presenter.view = viewController
         interactor.presenter = presenter
         router.presenter = presenter
+        router.viewController = viewController
         
-        return viewController
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.navigationBar.isHidden = true
+        
+        return navController
     }
 }

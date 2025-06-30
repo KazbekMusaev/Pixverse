@@ -10,11 +10,14 @@ import UIKit
 protocol CreateViewProtocol: AnyObject {
     func showInformations()
     func tapToSeeAllBtn(_ numberOfSection: Int)
+    func finishLoadData(_ model: [TemplatesModel])
 }
 
 final class CreateView: UIViewController {
 
-    var model: [TemplatesModel] = []
+    var allEffects: [TemplatesModel] = []
+    var popularEffects: [TemplatesModel] = []
+    
     var presenter: CreatePresenterProtocol?
     
     private lazy var widthWithInsert = (view.frame.width - 48) / 2
@@ -27,14 +30,6 @@ final class CreateView: UIViewController {
     
     //MARK: - Functions
     private func settupView() {
-        model = [
-            TemplatesModel(prompt: "", name: "", category: "", isActive: false, previewSmall: "", previewLarge: "", id: 0, templateId: 2),
-            TemplatesModel(prompt: "", name: "", category: "", isActive: false, previewSmall: "", previewLarge: "", id: 0, templateId: 2),
-            TemplatesModel(prompt: "", name: "", category: "", isActive: false, previewSmall: "", previewLarge: "", id: 0, templateId: 2),
-            TemplatesModel(prompt: "", name: "", category: "", isActive: false, previewSmall: "", previewLarge: "", id: 0, templateId: 2),
-            TemplatesModel(prompt: "", name: "", category: "", isActive: false, previewSmall: "", previewLarge: "", id: 0, templateId: 2),
-            TemplatesModel(prompt: "", name: "", category: "", isActive: false, previewSmall: "", previewLarge: "", id: 0, templateId: 2)
-        ]
         view.backgroundColor = .background
         
         view.addSubview(navBar)
@@ -66,7 +61,7 @@ final class CreateView: UIViewController {
             templatesCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
-        
+        presenter?.startLoadData()
     }
     
     private func createHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
@@ -111,12 +106,16 @@ final class CreateView: UIViewController {
     private lazy var textToVideoBtn: UIButton = {
         let btn = ComponentBuilder.getCustomBtnForCreate(text: "Text to video", isDark: true)
         btn.addAction(textToVideoAction, for: .touchUpInside)
+        DispatchQueue.main.async {
+            btn.addHorizontalGradient(colors: [.accentPrimary, .accentSecondary])
+        }
         return btn
     }()
     
     private lazy var imageAndTextToVideoBtn: UIButton = {
         let btn = ComponentBuilder.getCustomBtnForCreate(text: "Image&text to video", isDark: false)
         btn.addAction(imageAndTextToVideoAction, for: .touchUpInside)
+        btn.backgroundColor = .backgroundTertiary
         return btn
     }()
     
@@ -170,22 +169,30 @@ final class CreateView: UIViewController {
     private lazy var textToVideoAction = UIAction { [weak self] _ in
         guard let self else { return }
         self.textToVideoBtn.clickAnimate()
+        self.presenter?.goToTextToVideo()
     }
     
     private lazy var imageAndTextToVideoAction = UIAction { [weak self] _ in
         guard let self else { return }
         self.imageAndTextToVideoBtn.clickAnimate()
+        self.presenter?.goToImgAndTextToVideo()
     }
     
 }
 
 extension CreateView: CreateViewProtocol {
+    func finishLoadData(_ model: [TemplatesModel]) {
+        allEffects = model
+        popularEffects = allEffects.filter({ $0.category == "Trending" })
+        templatesCollectionView.reloadData()
+    }
+    
     func tapToSeeAllBtn(_ numberOfSection: Int) {
         switch numberOfSection {
         case 0:
-            print("tap to \(numberOfSection) section")
+            presenter?.goToSeeAll("Trending")
         default:
-            print("tap to \(numberOfSection) section")
+            presenter?.goToSeeAll("All")
         }
     }
     
@@ -195,7 +202,15 @@ extension CreateView: CreateViewProtocol {
 }
 
 extension CreateView: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0 :
+            presenter?.selectItemInCollection(model: popularEffects[indexPath.item])
+        default:
+            presenter?.selectItemInCollection(model: allEffects[indexPath.item])
+        }
+        
+    }
 }
 
 extension CreateView: UICollectionViewDataSource {
@@ -204,12 +219,21 @@ extension CreateView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        model.count
+        if section == 0 {
+            return popularEffects.count
+        } else {
+            return allEffects.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TemplatesCell.reuseId, for: indexPath) as? TemplatesCell else {
             return UICollectionViewCell()
+        }
+        if indexPath.section == 0 {
+            cell.configureCell(popularEffects[indexPath.item])
+        } else {
+            cell.configureCell(allEffects[indexPath.item])
         }
         return cell
     }

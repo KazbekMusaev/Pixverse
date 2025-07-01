@@ -132,4 +132,16 @@ final class NetworkManager {
         task.resume()
         
     }
+    
+    ///Метод для скачивания видео
+    static func downloadVideo(url: URL, completion: @escaping (Result<URL, Error>) -> ()) {
+        let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
+            if let localURL {
+                completion(.success(localURL))
+            } else if let error {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
 }

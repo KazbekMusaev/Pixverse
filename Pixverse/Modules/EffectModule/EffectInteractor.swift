@@ -20,6 +20,7 @@ final class EffectInteractor: EffectInteractorProtocol {
     private var statusDispatchTimer: DispatchSourceTimer?
     private var statusId: String?
     private let statusCheckInterval: TimeInterval = 5.0
+    var saveVideoModel: SaveVideoModel?
     
     func loadData(templateId: String, image: Data) {
         NetworkManager.createVideoWithTemplatesPhoto(templateId: templateId, image: image) { [weak self] result in
@@ -53,16 +54,47 @@ final class EffectInteractor: EffectInteractorProtocol {
         }
         
         NetworkManager.getVideoStatus(videoId: statusId) { [weak self] result in
+            guard let self, let saveVideoModel else { return }
             switch result {
             case .success(let success):
                 print("Статус видео: \(success.status)")
                 if success.status == .successResponse {
-                    self?.statusDispatchTimer?.cancel()
-                    self?.presenter?.videoGenerationCompleted(success.videoUrl ?? "")
+                    self.statusDispatchTimer?.cancel()
+                    
+                    self.startDownloadVideo(urlString: success.videoUrl ?? "", completion: { isDownload in
+                        if isDownload {
+                            self.presenter?.videoGenerationCompleted(success.videoUrl ?? "", filePath: saveVideoModel.getFileName())
+                        } else {
+                            print("error download")
+                        }
+                    })
+                    
                 }
             case .failure(let failure):
                 print("Ошибка проверки статуса: \(failure.localizedDescription)")
             }
         }
     }
+    
+    private func startDownloadVideo(urlString: String, completion: @escaping (Bool) -> ()) {
+        guard let url = URL(string: urlString) else { return }
+        NetworkManager.downloadVideo(url: url) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                if let saveVideoModel {
+                    FileManagerService.saveVideoToFiles(videoModel: saveVideoModel, from: success) { isSave in
+                        if isSave {
+                            completion(true)
+                        } else {
+                            completion(false)
+                        }
+                    }
+                }
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+    
 }

@@ -186,19 +186,25 @@ extension EffectView: EffectViewProtocol {
     }
     
     func showCreatingAnimations() {
+        
         creatingLoadView.action = { [weak self] in
             self?.presenter?.touchToPopVCBtn()
         }
+        
         creatingLoadView.settupView()
         
-        view.addSubview(creatingLoadView)
+        UIView.animate(withDuration: 1) { [weak self] in
+            guard let self else { return }
+            self.view.addSubview(self.creatingLoadView)
+            
+            NSLayoutConstraint.activate([
+                self.creatingLoadView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                self.creatingLoadView.topAnchor.constraint(equalTo: view.topAnchor),
+                self.creatingLoadView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                self.creatingLoadView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
         
-        NSLayoutConstraint.activate([
-            creatingLoadView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            creatingLoadView.topAnchor.constraint(equalTo: view.topAnchor),
-            creatingLoadView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            creatingLoadView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
     }
     
     func showImagePicker(mediaType: MediaType) {

@@ -10,12 +10,12 @@ import UIKit
 protocol EffectRouterProtocol: AnyObject {
     func popVC()
     func presentAddPhotoHelper()
-    func pushToResult(_ videoUrl: String)
+    func pushToResult(_ videoUrl: String, filePath: String)
 }
 
 final class EffectRouter: EffectRouterProtocol {
-    func pushToResult(_ videoUrl: String) {
-        let vc = TemplatesResultRouter.build(videoUrl, delegate: self)
+    func pushToResult(_ videoUrl: String, filePath: String) {
+        let vc = TemplatesResultRouter.build(videoUrl, delegate: self, localFilePath: filePath)
         view?.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -36,6 +36,7 @@ final class EffectRouter: EffectRouterProtocol {
         router.presenter = presenter
         router.view = view
         
+        interactor.saveVideoModel = SaveVideoModel(name: model.name, date: Date())
         
         return view
     }

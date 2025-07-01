@@ -16,7 +16,7 @@ protocol EffectPresenterProtocol: AnyObject {
     func getSuccessResponse()
     func getError(errorText: String)
     
-    func videoGenerationCompleted(_ videoUrl: String)
+    func videoGenerationCompleted(_ videoUrl: String, filePath: String)
 }
 
 final class EffectPresenter {
@@ -34,17 +34,14 @@ final class EffectPresenter {
 }
 
 extension EffectPresenter: EffectPresenterProtocol {
-    func videoGenerationCompleted(_ videoUrl: String) {
+    func videoGenerationCompleted(_ videoUrl: String, filePath: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.router.pushToResult(videoUrl)
             self?.view?.stopCreatingAnimations()
+            self?.router.pushToResult(videoUrl, filePath: filePath)
         }
     }
     
     func getSuccessResponse() {
-        DispatchQueue.main.async { [weak self] in
-            self?.view?.showCreatingAnimations()
-        }
         interactor.loadVideoGenerateStatus()
     }
     
@@ -53,6 +50,9 @@ extension EffectPresenter: EffectPresenterProtocol {
     }
     
     func imageIsSelect(templateId: String, image: Data) {
+        DispatchQueue.main.async { [weak self] in 
+            self?.view?.showCreatingAnimations()
+        }
         interactor.loadData(templateId: templateId, image: image)
     }
     

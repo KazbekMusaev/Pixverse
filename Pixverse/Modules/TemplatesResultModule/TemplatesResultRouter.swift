@@ -9,6 +9,7 @@ import UIKit
 
 protocol TemplatesResultRouterProtocol: AnyObject {
     func popVC()
+    func shareAction(urlString: String)
 }
 
 final class TemplatesResultRouter: TemplatesResultRouterProtocol {
@@ -18,7 +19,7 @@ final class TemplatesResultRouter: TemplatesResultRouterProtocol {
     weak var delegate: EffectRouterProtocol?
     
     //MARK: - Module Builder
-    static func build(_ videoUrl: String, delegate: EffectRouterProtocol) -> UIViewController {
+    static func build(_ videoUrl: String, delegate: EffectRouterProtocol, localFilePath: String) -> UIViewController {
         let view = TemplatesResultView()
         let interactor = TemplatesResultInteractor()
         let router = TemplatesResultRouter()
@@ -26,16 +27,29 @@ final class TemplatesResultRouter: TemplatesResultRouterProtocol {
         
         view.presenter = presenter
         view.videoURL = videoUrl
+        
         presenter.view = view
+        
         interactor.presenter = presenter
+        interactor.fileName = localFilePath
+        
         router.presenter = presenter
         router.view = view
         router.delegate = delegate
+        
         
         return view
     }
     
     func popVC() {
         delegate?.popVC()
+    }
+    
+    func shareAction(urlString: String) {
+        if let fileURL = FileManagerService.getFileURL(fileName: urlString + ".mp4"), let view {
+            ComponentBuilder.presentShareSheet(for: fileURL, from: view)
+        } else {
+            print("Файл не найден")
+        }
     }
 }

@@ -177,6 +177,21 @@ final class ComponentBuilder {
     }
     
     
-    ///Метод для получения алерта из 3х кнопок
-    
+    static func presentShareSheet(for fileURL: URL, from viewController: UIViewController) {
+        let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+        activityVC.excludedActivityTypes = [.assignToContact, .addToReadingList]
+        
+        // Для iPad (если используешь popover)
+        if let popoverController = activityVC.popoverPresentationController {
+            popoverController.sourceView = viewController.view
+            popoverController.sourceRect = CGRect(x: viewController.view.bounds.midX,
+                                                  y: viewController.view.bounds.midY,
+                                                  width: 0,
+                                                  height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        viewController.present(activityVC, animated: true)
+    }
+  
 }

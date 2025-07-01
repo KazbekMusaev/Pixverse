@@ -15,7 +15,7 @@ protocol EffectRouterProtocol: AnyObject {
 
 final class EffectRouter: EffectRouterProtocol {
     func pushToResult(_ videoUrl: String, filePath: String) {
-        let vc = TemplatesResultRouter.build(videoUrl, delegate: self, localFilePath: filePath)
+        let vc = TemplatesResultRouter.build(videoUrl, localFilePath: filePath)
         view?.navigationController?.pushViewController(vc, animated: true)
     }
     

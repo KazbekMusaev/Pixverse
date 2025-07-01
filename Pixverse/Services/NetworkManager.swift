@@ -144,4 +144,42 @@ final class NetworkManager {
         }
         task.resume()
     }
+    
+    ///Метод для получение видео из текста
+    static func textToVideo(promptText: String, completion: @escaping (Result<TemplateVideoModel, Error>) -> ()) {
+        guard var urlComponents = URLSession.getUrlComponents("/pixverse/api/v1/text2video") else { return }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "userId", value: "test"),
+            URLQueryItem(name: "appId", value: "com.test.test"),
+            URLQueryItem(name: "promptText", value: promptText)
+        ]
+        
+        guard let url = urlComponents.url else { return }
+        var req = URLRequest(url: url)
+        
+        req.httpMethod = "POST"
+
+        let task = URLSession.shared.dataTask(with: req) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data else {
+                let error = NSError(domain: "Data is nill", code: 400)
+                completion(.failure(error))
+                print("error -> \(error.localizedDescription)")
+                return
+            }
+            
+            do {
+                let result = try JSONDecoder().decode(TemplateVideoModel.self, from: data)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+        
+    }
 }

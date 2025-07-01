@@ -9,11 +9,20 @@ import UIKit
 
 protocol TextToVideoRouterProtocol: AnyObject {
     func popVC()
+    func pushToResult(_ videoUrl: String, filePath: String, prompt: String)
 }
 
 final class TextToVideoRouter: TextToVideoRouterProtocol {
+    func pushToResult(_ videoUrl: String, filePath: String, prompt: String) {
+        let vc = TemplatesResultRouter.buildWithPrompt(videoUrl, localFilePath: filePath, prompt: prompt)
+        view?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func popVC() {
-        view?.navigationController?.popViewController(animated: true)
+        TabBarManager.shared.show()
+        if let targetVC = view?.navigationController?.viewControllers.first(where: { $0 is CreateView }) {
+            view?.navigationController?.popToViewController(targetVC, animated: true)
+        }
     }
     
     

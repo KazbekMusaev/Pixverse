@@ -104,7 +104,7 @@ final class CreateView: UIViewController {
     private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Hailuo")
     
     private lazy var textToVideoBtn: UIButton = {
-        let btn = ComponentBuilder.getCustomBtnForCreate(text: "Text to video", isDark: true)
+        let btn = ComponentBuilder.getCustomBtnForCreate(text: "Text to video", isDark: true, textColor: .accentSecondaryDark)
         btn.addAction(textToVideoAction, for: .touchUpInside)
         DispatchQueue.main.async {
             btn.addHorizontalGradient(colors: [.accentPrimary, .accentSecondary])
@@ -113,7 +113,7 @@ final class CreateView: UIViewController {
     }()
     
     private lazy var imageAndTextToVideoBtn: UIButton = {
-        let btn = ComponentBuilder.getCustomBtnForCreate(text: "Image&text to video", isDark: false)
+        let btn = ComponentBuilder.getCustomBtnForCreate(text: "Image&text to video", isDark: false, textColor: .accentSecondary)
         btn.addAction(imageAndTextToVideoAction, for: .touchUpInside)
         btn.backgroundColor = .backgroundTertiary
         return btn

@@ -9,7 +9,7 @@ import Foundation
 
 struct SaveVideoModel {
     
-    let name: String
+    var name: String
     let date: Date
     
     func getFileName() -> String {

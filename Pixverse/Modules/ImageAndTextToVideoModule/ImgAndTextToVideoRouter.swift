@@ -12,7 +12,9 @@ protocol ImgAndTextToVideoRouterProtocol: AnyObject {
 }
 
 final class ImgAndTextToVideoRouter: ImgAndTextToVideoRouterProtocol {
+    
     func popVC() {
+        TabBarManager.shared.show()
         viewController?.navigationController?.popViewController(animated: true)
     }
     

@@ -16,10 +16,9 @@ final class TemplatesResultRouter: TemplatesResultRouterProtocol {
     
     weak var view: TemplatesResultView?
     weak var presenter: TemplatesResultPresenterProtocol?
-    weak var delegate: EffectRouterProtocol?
     
     //MARK: - Module Builder
-    static func build(_ videoUrl: String, delegate: EffectRouterProtocol, localFilePath: String) -> UIViewController {
+    static func build(_ videoUrl: String, localFilePath: String) -> UIViewController {
         let view = TemplatesResultView()
         let interactor = TemplatesResultInteractor()
         let router = TemplatesResultRouter()
@@ -35,14 +34,36 @@ final class TemplatesResultRouter: TemplatesResultRouterProtocol {
         
         router.presenter = presenter
         router.view = view
-        router.delegate = delegate
         
+        return view
+    }
+    
+    static func buildWithPrompt(_ videoUrl: String, localFilePath: String, prompt: String) -> UIViewController {
+        let view = TemplatesResultView()
+        let interactor = TemplatesResultInteractor()
+        let router = TemplatesResultRouter()
+        let presenter = TemplatesResultPresenter(router: router, interactor: interactor)
+        
+        view.prompt = prompt
+        view.presenter = presenter
+        view.videoURL = videoUrl
+        
+        presenter.view = view
+        
+        interactor.presenter = presenter
+        interactor.fileName = localFilePath
+        
+        router.presenter = presenter
+        router.view = view
         
         return view
     }
     
     func popVC() {
-        delegate?.popVC()
+        TabBarManager.shared.show()
+        if let targetVC = view?.navigationController?.viewControllers.first(where: { $0 is CreateView }) {
+            view?.navigationController?.popToViewController(targetVC, animated: true)
+        }
     }
     
     func shareAction(urlString: String) {

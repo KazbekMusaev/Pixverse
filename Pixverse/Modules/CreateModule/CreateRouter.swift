@@ -29,12 +29,14 @@ final class CreateRouter: CreateRouterProtocol {
     func pushToImgAndTextToVideo() {
         let vc = ImgAndTextToVideoRouter.build()
         viewController?.navigationController?.pushViewController(vc, animated: true)
+        TabBarManager.shared.hide()
     }
     
     
     func pushToTextToVideo() {
         let vc = TextToVideoRouter.build()
         viewController?.navigationController?.pushViewController(vc, animated: true)
+        TabBarManager.shared.hide()
     }
     
     

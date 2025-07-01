@@ -9,7 +9,13 @@ import Foundation
 
 protocol TextToVideoPresenterProtocol: AnyObject {
     func viewDidLoaded()
+    
     func touchToPopVCBtn()
+    
+    func startCreateVideo(prompt: String)
+    func getSuccessResponse()
+    
+    func videoGenerationCompleted(_ videoUrl: String, filePath: String, prompt: String)
 }
 
 final class TextToVideoPresenter {
@@ -27,6 +33,22 @@ final class TextToVideoPresenter {
 }
 
 extension TextToVideoPresenter: TextToVideoPresenterProtocol {
+    func videoGenerationCompleted(_ videoUrl: String, filePath: String, prompt: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.stopCreatingAnimations()
+            self?.router.pushToResult(videoUrl, filePath: filePath, prompt: prompt)
+        }
+    }
+    
+    func getSuccessResponse() {
+        interactor.loadVideoGenerateStatus()
+    }
+    
+    func startCreateVideo(prompt: String) {
+        interactor.createVideo(prompt: prompt)
+        view?.showCreatingAnimations()
+    }
+    
     func touchToPopVCBtn() {
         router.popVC()
     }

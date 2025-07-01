@@ -9,7 +9,9 @@ import Foundation
 
 protocol ImgAndTextToVideoPresenterProtocol: AnyObject {
     func viewDidLoaded()
+    
     func touchToPopVCBtn()
+    func createBtnTaped()
 }
 
 final class ImgAndTextToVideoPresenter {
@@ -27,6 +29,10 @@ final class ImgAndTextToVideoPresenter {
 }
 
 extension ImgAndTextToVideoPresenter: ImgAndTextToVideoPresenterProtocol {
+    func createBtnTaped() {
+        view?.showCreatingAnimations()
+    }
+    
     func viewDidLoaded() {
         view?.showInformation()
     }

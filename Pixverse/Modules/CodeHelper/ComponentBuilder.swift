@@ -100,7 +100,7 @@ final class ComponentBuilder {
     
     
     ///Метод для получения кастомных кнопок
-    static func getCustomBtnForCreate(text: String, isDark: Bool) -> UIButton {
+    static func getCustomBtnForCreate(text: String, isDark: Bool, textColor: UIColor) -> UIButton {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 70).isActive = true
@@ -115,6 +115,7 @@ final class ComponentBuilder {
         label.text = text
         label.font = .systemFont(ofSize: 13) // SF PRO
         label.textAlignment = .center
+        label.textColor = textColor
         
         btn.addSubview(sparklesImg)
         btn.addSubview(label)
@@ -143,12 +144,33 @@ final class ComponentBuilder {
     }
     
     ///Метод для получения TextView который используется в двух модулях
-    static func getTextView() -> UITextView {
+    static func getTextView(delegate: UITextViewDelegate) -> UITextView {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.font = .systemFont(ofSize: 17) // SF PRO
+        textView.textAlignment = .left
+        textView.textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        textView.textColor = .labelPrimary
+        textView.layer.cornerRadius = 12
+        textView.layer.borderWidth = 1
+        textView.layer.borderColor = UIColor.separatorSecondary.cgColor
+        textView.backgroundColor = .clear
+        textView.delegate = delegate
         
         return textView
     }
+    
+//    $0.translatesAutoresizingMaskIntoConstraints = false
+
+//    
+//    $0.delegate = self
+//    
+//    $0.addSubview(startTextingLabel)
+//    
+//    NSLayoutConstraint.activate([
+//        startTextingLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor, constant: 12),
+//        startTextingLabel.topAnchor.constraint(equalTo: $0.topAnchor, constant: 10),
+//    ])
     
     ///Метод для получения получения кнопк
     static func getCustomBtn(action: UIAction, text: String, textColor: UIColor = .accentSecondaryDark) -> UIButton {
@@ -163,6 +185,25 @@ final class ComponentBuilder {
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 17) // SF PRO
         label.textColor = textColor
+        
+        btn.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: btn.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: btn.trailingAnchor),
+            label.topAnchor.constraint(equalTo: btn.topAnchor),
+            label.bottomAnchor.constraint(equalTo: btn.bottomAnchor),
+        ])
+         
+        return btn
+    }
+    
+    ///Метод для возможности изменения цвета лейла
+    static func getCustomBtnForChangeLabel(action: UIAction, label: UILabel) -> UIButton {
+        let btn = UIButton(primaryAction: action)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        btn.layer.cornerRadius = 8
         
         btn.addSubview(label)
         
@@ -193,5 +234,4 @@ final class ComponentBuilder {
 
         viewController.present(activityVC, animated: true)
     }
-  
 }

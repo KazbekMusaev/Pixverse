@@ -82,7 +82,7 @@ final class EffectView: UIViewController {
 //    }
     
     //MARK: - View elements
-    lazy var creatingLoadView = CreatingVideoAnimateView()
+    private lazy var creatingLoadView = CreatingVideoAnimateView()
     
     private lazy var navBar = ComponentBuilder.getCustomEmptyNavigationBar(title: model?.name ?? "", action: popVCAction)
     

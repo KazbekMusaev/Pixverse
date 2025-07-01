@@ -10,6 +10,15 @@ import GSPlayer
 
 protocol TemplatesResultViewProtocol: AnyObject {
     func showInformation()
+    
+    func shareBtnTaped()
+    func saveToFilesBtnTaped()
+    func deleteBtnTaped()
+    
+    func saveBtnTaped()
+    
+    func showSuccesSaveAllert()
+    func showErrorSaveAlert()
 }
 
 final class TemplatesResultView: UIViewController {
@@ -57,7 +66,11 @@ final class TemplatesResultView: UIViewController {
         moreActionBtn.translatesAutoresizingMaskIntoConstraints = false
         moreActionBtn.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
         moreActionBtn.tintColor = .accentPrimary
-        moreActionBtn.addTarget(self, action: #selector(showMenu(_:)), for: .touchUpInside)
+        moreActionBtn.layer.cornerRadius = 12
+        
+        moreActionBtn.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        let interaction = UIContextMenuInteraction(delegate: self)
+        moreActionBtn.addInteraction(interaction)
         
         view.addSubview(moreActionBtn)
         NSLayoutConstraint.activate([
@@ -116,6 +129,7 @@ final class TemplatesResultView: UIViewController {
     private lazy var saveAction = UIAction { [weak self] _ in
         guard let self else { return }
         self.saveBtn.clickAnimate()
+        self.saveBtnTaped()
     }
     
     private lazy var popVCAction = UIAction { [weak self] _ in
@@ -137,22 +151,6 @@ final class TemplatesResultView: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.playBtn.isHidden = true
         }
-    }
-    
-    @objc func showMenu(_ sender: UIButton) {
-        let items = [
-            EditMenuItem(title: "Share", image: UIImage(systemName: "pencil")) {
-                print("Редактировать tapped")
-            },
-            EditMenuItem(title: "Save to files", image: UIImage(systemName: "square.and.arrow.up")) {
-                print("Поделиться tapped")
-            },
-            EditMenuItem(title: "Delete", image: UIImage(systemName: "trash"), action: {
-                print("Удалить tapped")
-            }, isDestructive: true)
-        ]
-        
-        showEditMenu(for: sender, items: items)
     }
     
     //MARK: - Gesture
@@ -180,8 +178,77 @@ final class TemplatesResultView: UIViewController {
 }
 
 extension TemplatesResultView: TemplatesResultViewProtocol {
+    func showSuccesSaveAllert() {
+        let alertAction = UIAlertController(title: "Video saved to gallery", message: nil, preferredStyle: .alert)
+        let okBtn = UIAlertAction(title: "Ok", style: .cancel)
+        alertAction.addAction(okBtn)
+        self.present(alertAction, animated: true)
+    }
+    
+    func showErrorSaveAlert() {
+        let alertAction = UIAlertController(title: "Error, video not saved to gallery?", message: "Something went wrong or the server is not responding. Try again or do it later.", preferredStyle: .alert)
+        let cancelBtn = UIAlertAction(title: "Cancel", style: .default)
+        let tryAgainBtn = UIAlertAction(title: "Try Again", style: .cancel) { _ in
+            self.saveBtnTaped()
+        }
+        alertAction.addAction(cancelBtn)
+        alertAction.addAction(tryAgainBtn)
+        self.present(alertAction, animated: true)
+    }
+    
+    func shareBtnTaped() {
+        presenter?.shareBtnTaped()
+    }
+    
+    func saveToFilesBtnTaped() {
+        print("saveToFilesBtnTaped")
+    }
+    
+    func deleteBtnTaped() {
+        presenter?.deleteBtnTaped()
+    }
+    
+    func saveBtnTaped() {
+        presenter?.saveBtnTaped()
+    }
+    
     func showInformation() {
         settupView()
+    }
+    
+    
+}
+
+extension TemplatesResultView: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil,
+            actionProvider: { [weak self] _ in
+                let share = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+                    self?.shareBtnTaped()
+                    
+                }
+                
+                let save = UIAction(title: "Save to files", image: UIImage(systemName: "folder.fill.badge.plus")) { _ in
+                    self?.saveBtnTaped()
+                }
+                
+                let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    
+                    let alertAction = UIAlertController(title: "Delete this video?", message: "It will disappear from the list on the History tab. You will not be able to restore it after deleting it.", preferredStyle: .alert)
+                    let yesBtn = UIAlertAction(title: "Cancel", style: .cancel)
+                    let cancelBtn = UIAlertAction(title: "Delete", style: .destructive) { _ in
+                        self?.deleteBtnTaped()
+                    }
+                    alertAction.addAction(yesBtn)
+                    alertAction.addAction(cancelBtn)
+                    self?.present(alertAction, animated: true)
+                }
+                
+                return UIMenu(title: "", children: [share, save, delete])
+            }
+        )
     }
     
     

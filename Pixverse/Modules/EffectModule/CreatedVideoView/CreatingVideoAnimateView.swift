@@ -54,7 +54,7 @@ final class CreatingVideoAnimateView: UIView {
         view.widthAnchor.constraint(equalToConstant: size).isActive = true
         view.layer.cornerRadius = size / 2
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             view.addHorizontalGradient(colors: [.accentPrimary, .accentSecondary])
         }
         

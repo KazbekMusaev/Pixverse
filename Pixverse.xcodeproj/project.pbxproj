@@ -10,12 +10,10 @@
 		18182E3F2E12A66600A33130 /* GSPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 18182E3E2E12A66600A33130 /* GSPlayer */; };
 		18182E4F2E12B9BF00A33130 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 18182E4E2E12B9BF00A33130 /* RxCocoa */; };
 		18182E512E12B9BF00A33130 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 18182E502E12B9BF00A33130 /* RxSwift */; };
-		186AB3682E152FBA00C9EA2F /* VideoModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186AB3662E152FBA00C9EA2F /* VideoModel+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		18182D252E0FF93200A33130 /* Pixverse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pixverse.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		186AB3662E152FBA00C9EA2F /* VideoModel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -56,7 +54,6 @@
 		18182D1C2E0FF93200A33130 = {
 			isa = PBXGroup;
 			children = (
-				186AB3662E152FBA00C9EA2F /* VideoModel+CoreDataProperties.swift */,
 				18182D272E0FF93200A33130 /* Pixverse */,
 				18182D262E0FF93200A33130 /* Products */,
 			);
@@ -151,7 +148,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				186AB3682E152FBA00C9EA2F /* VideoModel+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

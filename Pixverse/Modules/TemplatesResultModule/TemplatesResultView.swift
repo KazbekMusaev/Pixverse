@@ -21,6 +21,7 @@ final class TemplatesResultView: UIViewController {
     var videoURL: String?
     
     var prompt: String?
+    var fileName: String?
     
     //MARK: - View life cycle
     override func viewDidLoad() {
@@ -66,6 +67,11 @@ final class TemplatesResultView: UIViewController {
             scrollView.topAnchor.constraint(equalTo: videoPlayerView.bottomAnchor, constant: 12),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -56),
         ])
+    }
+    
+    private func settupDownloadIsDocument() {
+        guard let fileName, let filePath = FileManagerService.getFileURL(fileName: fileName + ".mp4") else { return }
+        videoPlayerView.play(for: filePath)
     }
     
     //MARK: - View elements
@@ -277,6 +283,9 @@ extension TemplatesResultView: TemplatesResultViewProtocol {
         if let prompt {
             textView.text = prompt
             settupWithPrompt()
+        }
+        if let fileName {
+            settupDownloadIsDocument()
         }
     }
     

@@ -183,7 +183,7 @@ final class ComponentBuilder {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = text
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17) // SF PRO
+        label.font = .boldSystemFont(ofSize: 17) // SF PRO
         label.textColor = textColor
         
         btn.addSubview(label)
@@ -233,5 +233,93 @@ final class ComponentBuilder {
         }
 
         viewController.present(activityVC, animated: true)
+    }
+    
+    ///Метод для пустой коллекции
+    static func getEmptyView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        lazy var descriptLabel: UILabel = {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.text = "Create your first generation"
+            $0.font = .systemFont(ofSize: 13) //SF PRO
+            $0.textColor = .labelSecondary
+            $0.numberOfLines = 1
+            $0.textAlignment = .center
+            return $0
+        }(UILabel())
+        
+        lazy var labelText: UILabel = {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.text = "It's empty here"
+            $0.font = .systemFont(ofSize: 20) //SF PRO
+            $0.textColor = .labelPrimary
+            $0.numberOfLines = 1
+            $0.textAlignment = .center
+            return $0
+        }(UILabel())
+        
+        lazy var emptyImage: UIImageView = {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.heightAnchor.constraint(equalToConstant: 64).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 64).isActive = true
+            $0.contentMode = .scaleAspectFit
+            $0.tintColor = .labelQuaternary
+            $0.image = UIImage(systemName: "folder.badge.plus")
+            return $0
+        }(UIImageView())
+        
+        let backView = UIView()
+        backView.translatesAutoresizingMaskIntoConstraints = false
+        backView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        backView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        backView.backgroundColor = .backgroundTertiary
+        backView.layer.cornerRadius = 40
+        backView.addSubview(emptyImage)
+        
+        NSLayoutConstraint.activate([
+            emptyImage.centerXAnchor.constraint(equalTo: backView.centerXAnchor),
+            emptyImage.centerYAnchor.constraint(equalTo: backView.centerYAnchor)
+        ])
+        
+        
+        view.addSubview(descriptLabel)
+        view.addSubview(labelText)
+        view.addSubview(backView)
+        
+        NSLayoutConstraint.activate([
+            descriptLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            descriptLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            descriptLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            
+            labelText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            labelText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            labelText.bottomAnchor.constraint(equalTo: descriptLabel.topAnchor, constant: -6),
+            
+            backView.bottomAnchor.constraint(equalTo: labelText.topAnchor, constant: -6),
+            backView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+        
+        return view
+    }
+    
+    static func getSmallBtn(action: UIAction, label: UILabel, isFavorite: Bool = false) -> UIButton {
+        let btn = UIButton(primaryAction: action)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        btn.layer.cornerRadius = 8
+        btn.backgroundColor = isFavorite ? .backgroundTertiary : .backgroundSecondary
+        
+        btn.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: btn.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: btn.trailingAnchor, constant: -16),
+            label.topAnchor.constraint(equalTo: btn.topAnchor, constant: 7),
+            label.bottomAnchor.constraint(equalTo: btn.bottomAnchor, constant: -7),
+        ])
+         
+        return btn
     }
 }

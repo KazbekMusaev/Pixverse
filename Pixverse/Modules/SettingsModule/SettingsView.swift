@@ -32,12 +32,12 @@ final class SettingsView: UIViewController {
             navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
             
+            
         ])
     }
     
     //MARK: - View elements
     private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Settings")
-    
     
     //MARK: - Actions
 

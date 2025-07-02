@@ -9,6 +9,14 @@ import Foundation
 
 protocol MinePresenterProtocol: AnyObject {
     func viewDidLoaded()
+    func viewWillAppear()
+    
+    func dataIsLoaded(model: [VideoModel])
+    func showEmptyView()
+    
+    func touchCreateBtn()
+    
+    func itemIsSelect(model: VideoModel)
 }
 
 final class MinePresenter {
@@ -26,8 +34,29 @@ final class MinePresenter {
 }
 
 extension MinePresenter: MinePresenterProtocol {
+    func viewWillAppear() {
+        interactor.startLoadData()
+    }
+    
+    func itemIsSelect(model: VideoModel) {
+        guard let pathToFiles = model.pathToFiles else { return }
+        router.goToResultModule(fileName: pathToFiles)
+    }
+    
+    func touchCreateBtn() {
+        router.changeTab()
+    }
+    
+    func showEmptyView() {
+        view?.dataIsEmpty()
+    }
+    
+    func dataIsLoaded(model: [VideoModel]) {
+        view?.reloadData(model)
+    }
+    
     func viewDidLoaded() {
-        print("MinePresenter -> view did loaded")
         view?.showInformations()
+        interactor.startLoadData()
     }
 }

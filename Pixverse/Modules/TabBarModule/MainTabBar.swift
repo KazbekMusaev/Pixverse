@@ -17,7 +17,6 @@ final class MainTabBar: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Ваша текущая настройка TabBar
         let createVC = CreateRouter.build()
         createVC.tabBarItem.title = "Create"
         let mineVC = MineRouter.build()
@@ -41,8 +40,9 @@ final class MainTabBar: UITabBarController {
         tabBar.unselectedItemTintColor = .labelQuaternary
         viewControllers = [createVC, mineVC, settingsVC]
         
-        // Сохраняем оригинальную позицию
         originalTabBarFrame = tabBar.frame
+        
+        TabBarManager.shared.tabBarController = self
         
         setupTabBarObservables()
     }
@@ -53,6 +53,11 @@ final class MainTabBar: UITabBarController {
                 self?.animateTabBar(hidden: isHidden)
             })
             .disposed(by: disposeBag)
+        TabBarManager.shared.selectedIndex
+                   .drive(onNext: { [weak self] index in
+                       self?.selectedIndex = index
+                   })
+                   .disposed(by: disposeBag)
     }
     
     private func animateTabBar(hidden: Bool) {
@@ -62,7 +67,7 @@ final class MainTabBar: UITabBarController {
             } else {
                 self.tabBar.isHidden = false
             }
-//            self.view.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }
     }
 }

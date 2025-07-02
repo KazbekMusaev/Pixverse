@@ -8,11 +8,20 @@
 import Foundation
 
 protocol MineInteractorProtocol {
-    
+    func startLoadData()
 }
 
 final class MineInteractor: MineInteractorProtocol {
     
     weak var presenter: MinePresenterProtocol?
+    
+    
+    func startLoadData() {
+        if CoreManager.shared.posts.isEmpty {
+            presenter?.showEmptyView()
+        } else {
+            presenter?.dataIsLoaded(model: CoreManager.shared.posts)
+        }
+    }
     
 }

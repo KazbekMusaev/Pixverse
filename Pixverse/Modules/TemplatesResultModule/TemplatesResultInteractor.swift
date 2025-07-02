@@ -32,6 +32,9 @@ final class TemplatesResultInteractor: TemplatesResultInteractorProtocol {
     
     func deleteFile() {
         guard let fileName else { return }
+        if let saveVideoIndex = CoreManager.shared.posts.firstIndex(where: { $0.pathToFiles == fileName }) {
+            CoreManager.shared.posts[saveVideoIndex].deleteData()
+        }
         if let path = FileManagerService.getFileURL(fileName: fileName + ".mp4") {
             FileManagerService.deleteFile(url: path) { [weak self] isDelete in
                 if isDelete {

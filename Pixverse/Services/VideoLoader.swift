@@ -13,11 +13,7 @@ final class VideoLoader {
     static let cache = NSCache<NSURL, UIImage>()
     private static var activeTasks = [UUID: DispatchWorkItem]()
     
-    static func loadThumbnail(
-        for videoURL: URL,
-        completion: @escaping (UIImage?) -> Void
-    ) -> UUID? {
-        // Проверяем кэш
+    static func loadThumbnail(for videoURL: URL, completion: @escaping (UIImage?) -> Void) -> UUID? {
         if let cachedImage = cache.object(forKey: videoURL as NSURL) {
             completion(cachedImage)
             return nil
@@ -25,7 +21,6 @@ final class VideoLoader {
         
         let taskID = UUID()
         
-        // Создаем work item для отмены
         let workItem = DispatchWorkItem {
             let asset = AVAsset(url: videoURL)
             let generator = AVAssetImageGenerator(asset: asset)
@@ -51,10 +46,8 @@ final class VideoLoader {
             }
         }
         
-        // Сохраняем задачу
         activeTasks[taskID] = workItem
         
-        // Запускаем в очереди с приоритетом
         DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
         
         return taskID
@@ -67,34 +60,7 @@ final class VideoLoader {
         }
     }
     
-    private static func downloadVideo(from url: URL, completion: @escaping (URL?) -> Void) {
-        let task = URLSession.shared.downloadTask(with: url) { tempURL, _, error in
-            guard let tempURL = tempURL, error == nil else {
-                completion(nil)
-                return
-            }
-            
-            // Перемещаем файл в кэш, чтобы он не удалился автоматически
-            let fileManager = FileManager.default
-            let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-            let destinationURL = cacheDir.appendingPathComponent(url.lastPathComponent)
-            
-            do {
-                if fileManager.fileExists(atPath: destinationURL.path) {
-                    try fileManager.removeItem(at: destinationURL)
-                }
-                try fileManager.moveItem(at: tempURL, to: destinationURL)
-                completion(destinationURL)
-            } catch {
-                print("Ошибка сохранения видео: \(error)")
-                completion(nil)
-            }
-        }
-        task.resume()
-    }
-    
     private static func generateThumbnail(from videoURL: URL, completion: @escaping (UIImage?) -> Void ) {
-        // Указываем QoS .userInitiated для важных задач
         DispatchQueue.global(qos: .userInitiated).async {
             let asset = AVAsset(url: videoURL)
             let generator = AVAssetImageGenerator(asset: asset)
@@ -111,5 +77,25 @@ final class VideoLoader {
                 completion(nil)
             }
         }
+    }
+    
+    static func addVideoPlayer(to view: UIView, filename: String) {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        
+        let videoURL = documentsDirectory.appendingPathComponent(filename)
+        
+        guard FileManager.default.fileExists(atPath: videoURL.path) else {
+            print("Video file not found")
+            return
+        }
+        
+        let player = AVPlayer(url: videoURL)
+        let playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = view.bounds
+        playerLayer.videoGravity = .resizeAspectFill
+        
+        view.layer.addSublayer(playerLayer)
     }
 }

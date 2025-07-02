@@ -5,6 +5,7 @@
 //  Created by KazbekMusaev on 30.06.2025.
 //
 
+import UIKit
 import RxSwift
 import RxCocoa
 
@@ -14,6 +15,11 @@ class TabBarManager {
     
     private let _isHidden = BehaviorRelay<Bool>(value: false)
     var isHidden: Driver<Bool> { return _isHidden.asDriver() }
+    
+    private let _selectedIndex = BehaviorRelay<Int>(value: 0)
+    var selectedIndex: Driver<Int> { return _selectedIndex.asDriver() }
+    
+    weak var tabBarController: UITabBarController?
     
     func toggle(animated: Bool = true) {
         _isHidden.accept(!_isHidden.value)
@@ -26,4 +32,23 @@ class TabBarManager {
     func show(animated: Bool = true) {
         _isHidden.accept(false)
     }
+    
+    func selectTab(at index: Int) {
+        guard index >= 0 && index < (tabBarController?.viewControllers?.count ?? 0) else { return }
+        _selectedIndex.accept(index)
+        tabBarController?.selectedIndex = index
+    }
+    
+    func selectCreateTab() {
+        selectTab(at: 0)
+    }
+    
+    func selectMineTab() {
+        selectTab(at: 1)
+    }
+    
+    func selectSettingsTab() {
+        selectTab(at: 2)
+    }
+    
 }

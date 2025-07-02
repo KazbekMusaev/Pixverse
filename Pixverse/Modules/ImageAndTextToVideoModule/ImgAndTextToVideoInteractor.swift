@@ -65,6 +65,7 @@ final class ImgAndTextToVideoInteractor: ImgAndTextToVideoInteractorProtocol {
                     model.name = model.name.getFirstThreeWords()
                     self.startDownloadVideo(urlString: success.videoUrl ?? "", completion: { isDownload in
                         if isDownload {
+                            CoreManager.shared.createData(videoModel: model, pathToFiles: model.getFileName())
                             self.presenter?.videoGenerationCompleted(success.videoUrl ?? "", filePath: model.getFileName(), prompt: saveVideoModel.name)
                         } else {
                             print("error download")

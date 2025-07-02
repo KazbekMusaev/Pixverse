@@ -64,8 +64,7 @@ final class EffectInteractor: EffectInteractorProtocol {
                     self.startDownloadVideo(urlString: success.videoUrl ?? "", completion: { isDownload in
                         if isDownload {
                             self.presenter?.videoGenerationCompleted(success.videoUrl ?? "", filePath: saveVideoModel.getFileName())
-                        } else {
-                            print("error download")
+                            CoreManager.shared.createData(videoModel: saveVideoModel, pathToFiles: saveVideoModel.getFileName())
                         }
                     })
                     
@@ -86,8 +85,6 @@ final class EffectInteractor: EffectInteractorProtocol {
                     FileManagerService.saveVideoToFiles(videoModel: saveVideoModel, from: success) { isSave in
                         if isSave {
                             completion(true)
-                        } else {
-                            completion(false)
                         }
                     }
                 }

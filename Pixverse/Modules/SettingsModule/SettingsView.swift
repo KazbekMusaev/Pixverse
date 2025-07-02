@@ -25,19 +25,26 @@ final class SettingsView: UIViewController {
     private func settupView() {
         view.backgroundColor = .background
         
+        view.addSubview(settingView.view)
         view.addSubview(navBar)
+    
         
         NSLayoutConstraint.activate([
             navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
             
-            
+            settingView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            settingView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            settingView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            settingView.view.topAnchor.constraint(lessThanOrEqualTo: navBar.bottomAnchor),
         ])
     }
     
     //MARK: - View elements
     private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Settings")
+    
+    private lazy var settingView = SettingHostingView()
     
     //MARK: - Actions
 
@@ -48,3 +55,5 @@ extension SettingsView: SettingsViewProtocol {
         settupView()
     }
 }
+
+

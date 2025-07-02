@@ -182,4 +182,57 @@ final class NetworkManager {
         task.resume()
         
     }
+    
+    
+    ///Метод для создания видео из текста и фото
+    static func imageAndTextToVideo(promptText: String, image: Data, completion: @escaping (Result<TemplateVideoModel, Error>) -> ()) {
+        guard var urlComponents = URLSession.getUrlComponents("/pixverse/api/v1/image2video") else { return }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "userId", value: "test"),
+            URLQueryItem(name: "appId", value: "com.test.test"),
+            URLQueryItem(name: "promptText", value: promptText)
+        ]
+        
+        let boundary = "Boundary-\(UUID().uuidString)"
+        
+        guard let url = urlComponents.url else { return }
+        var req = URLRequest(url: url)
+        
+        var body = Data()
+        let filename = "image.jpg"
+        let mimeType = "image/jpg"
+        
+        body.append("--\(boundary)\r\n")
+        body.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(filename)\"\r\n")
+        body.append("Content-Type: \(mimeType)\r\n\r\n")
+        body.append(image)
+        body.append("\r\n")
+        body.append("--\(boundary)--\r\n")
+        
+        req.httpMethod = "POST"
+        req.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        req.httpBody = body
+
+        let task = URLSession.shared.dataTask(with: req) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data else {
+                let error = NSError(domain: "Data is nill", code: 400)
+                completion(.failure(error))
+                print("error -> \(error.localizedDescription)")
+                return
+            }
+            
+            do {
+                let result = try JSONDecoder().decode(TemplateVideoModel.self, from: data)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
 }

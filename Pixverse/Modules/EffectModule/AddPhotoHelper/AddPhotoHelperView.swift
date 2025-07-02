@@ -10,6 +10,7 @@ import UIKit
 final class AddPhotoHelperView: UIViewController {
 
     weak var delegate: EffectViewProtocol?
+    weak var imageAndTextDelegate: ImgAndTextToVideoViewProtocol?
     
     //MARK: - View life cycle
     override func viewDidLoad() {
@@ -174,14 +175,24 @@ final class AddPhotoHelperView: UIViewController {
         guard let self else { return }
         self.takeAPhotoBtn.clickAnimate()
         self.dismiss(animated: true)
-        self.delegate?.showImagePicker(mediaType: .camera)
+        if let delegate {
+            delegate.showImagePicker(mediaType: .camera)
+        }
+        if let imageAndTextDelegate {
+            imageAndTextDelegate.showImagePicker(mediaType: .camera)
+        }
     }
     
     private lazy var fromTheGalleryAction = UIAction { [weak self] _ in
         guard let self else { return }
         self.fromTheGalleryBtn.clickAnimate()
         self.dismiss(animated: true)
-        self.delegate?.showImagePicker(mediaType: .gallery)
+        if let delegate {
+            delegate.showImagePicker(mediaType: .gallery)
+        }
+        if let imageAndTextDelegate {
+            imageAndTextDelegate.showImagePicker(mediaType: .gallery)
+        }
     }
 
 }

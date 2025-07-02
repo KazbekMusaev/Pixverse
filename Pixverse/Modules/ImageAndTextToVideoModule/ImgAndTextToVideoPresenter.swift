@@ -11,7 +11,12 @@ protocol ImgAndTextToVideoPresenterProtocol: AnyObject {
     func viewDidLoaded()
     
     func touchToPopVCBtn()
-    func createBtnTaped()
+    func createBtnTaped(prompt: String, image: Data)
+    
+    func addPhotoTaped()
+    func getSuccessResponse()
+    
+    func videoGenerationCompleted(_ videoUrl: String, filePath: String, prompt: String)
 }
 
 final class ImgAndTextToVideoPresenter {
@@ -29,7 +34,24 @@ final class ImgAndTextToVideoPresenter {
 }
 
 extension ImgAndTextToVideoPresenter: ImgAndTextToVideoPresenterProtocol {
-    func createBtnTaped() {
+    func videoGenerationCompleted(_ videoUrl: String, filePath: String, prompt: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.stopCreatingAnimations()
+            self?.router.pushToResult(videoUrl, filePath: filePath, prompt: prompt)
+        }
+    }
+    
+    func getSuccessResponse() {
+        interactor.loadVideoGenerateStatus()
+    }
+    
+    
+    func addPhotoTaped() {
+        router.presentAddPhotoHelper()
+    }
+    
+    func createBtnTaped(prompt: String, image: Data) {
+        interactor.createVideo(prompt: prompt, image: image)
         view?.showCreatingAnimations()
     }
     

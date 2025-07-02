@@ -59,11 +59,34 @@ final class TemplatesResultRouter: TemplatesResultRouterProtocol {
         return view
     }
     
+    static func buildWithoutDownloads(localFilePath: String) -> UIViewController {
+        let view = TemplatesResultView()
+        let interactor = TemplatesResultInteractor()
+        let router = TemplatesResultRouter()
+        let presenter = TemplatesResultPresenter(router: router, interactor: interactor)
+        
+        view.fileName = localFilePath
+        view.presenter = presenter
+        
+        presenter.view = view
+        
+        interactor.presenter = presenter
+        interactor.fileName = localFilePath
+        
+        router.presenter = presenter
+        router.view = view
+        
+        return view
+    }
+    
     func popVC() {
         TabBarManager.shared.show()
         if let targetVC = view?.navigationController?.viewControllers.first(where: { $0 is CreateView }) {
             view?.navigationController?.popToViewController(targetVC, animated: true)
+        } else if let targetVC = view?.navigationController?.viewControllers.first(where: { $0 is MineView }) {
+            view?.navigationController?.popToViewController(targetVC, animated: true)
         }
+        
     }
     
     func shareAction(urlString: String) {

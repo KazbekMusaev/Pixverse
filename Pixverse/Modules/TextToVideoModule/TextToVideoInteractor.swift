@@ -70,6 +70,7 @@ final class TextToVideoInteractor: TextToVideoInteractorProtocol {
                     self.startDownloadVideo(urlString: success.videoUrl ?? "", completion: { isDownload in
                         if isDownload {
                             self.presenter?.videoGenerationCompleted(success.videoUrl ?? "", filePath: model.getFileName(), prompt: saveVideoModel.name)
+                            CoreManager.shared.createData(videoModel: model, pathToFiles: model.getFileName())
                         } else {
                             print("error download")
                         }

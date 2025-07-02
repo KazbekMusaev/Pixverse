@@ -46,17 +46,23 @@ final class TemplatesCell: UICollectionViewCell {
     func configureCell(_ model: TemplatesModel) {
         templateNameLabel.text = model.name
         
-        if let taskID = currentTaskID {
-            VideoLoader.cancelTask(taskID)
+        if let url = URL(string: model.previewSmall) {
+            previewImg.play(for: url)
+            previewImg.pause(reason: .userInteraction)
+            indicator.removeFromSuperview()
         }
         
-        if let url = URL(string: model.previewSmall) {
-            currentTaskID = VideoLoader.loadThumbnail(for: url) { [weak self] image in
-                self?.previewImg.image = image
-                self?.indicator.stopAnimating()
-                self?.indicator.removeFromSuperview()
-            }
-        }
+//        if let taskID = currentTaskID {
+//            VideoLoader.cancelTask(taskID)
+//        }
+//        
+//        if let url = URL(string: model.previewSmall) {
+//            currentTaskID = VideoLoader.loadThumbnail(for: url) { [weak self] image in
+//                self?.previewImg.image = image
+//                self?.indicator.stopAnimating()
+//                self?.indicator.removeFromSuperview()
+//            }
+//        }
         
         
         
@@ -64,14 +70,14 @@ final class TemplatesCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        previewImg.image = nil
-        if let taskID = currentTaskID {
-            VideoLoader.cancelTask(taskID)
-        }
+//        previewImg.image = nil
+//        if let taskID = currentTaskID {
+//            VideoLoader.cancelTask(taskID)
+//        }
     }
     
     //MARK: - View elements
-    private lazy var previewImg: UIImageView = {
+    private lazy var previewImg: VideoPlayerView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.layer.cornerRadius = 12
         $0.contentMode = .scaleAspectFill
@@ -85,7 +91,7 @@ final class TemplatesCell: UICollectionViewCell {
         ])
         
         return $0
-    }(UIImageView())
+    }(VideoPlayerView())
     
     private lazy var templateNameLabel: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false

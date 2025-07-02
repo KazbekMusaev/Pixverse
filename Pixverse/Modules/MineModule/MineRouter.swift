@@ -8,10 +8,22 @@
 import UIKit
 
 protocol MineRouterProtocol: AnyObject {
-    
+    func changeTab()
+    func goToResultModule(fileName: String)
 }
 
 final class MineRouter: MineRouterProtocol {
+    
+    func goToResultModule(fileName: String) {
+        let vc = TemplatesResultRouter.buildWithoutDownloads(localFilePath: fileName)
+        viewController?.navigationController?.pushViewController(vc, animated: true)
+        TabBarManager.shared.hide()
+    }
+    
+    func changeTab() {
+        TabBarManager.shared.selectTab(at: 0)
+    }
+    
     
     weak var viewController: MineView?
     weak var presenter: MinePresenterProtocol?

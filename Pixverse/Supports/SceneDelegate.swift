@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         AppFlowController.shared.setup(with: window)
         
         let isLoadFirstData = UserDefaults.standard.bool(forKey: "isLoadFirstData")
-        if isLoadFirstData {
+        if !isLoadFirstData {
             AppFlowController.shared.rootViewControllerRelay.accept(LoadScreenPresenter.build())
             UserDefaults.standard.set(true, forKey: "isLoadFirstData")
         } else {

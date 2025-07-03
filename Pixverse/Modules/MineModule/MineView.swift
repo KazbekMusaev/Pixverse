@@ -30,11 +30,6 @@ final class MineView: UIViewController {
         presenter?.viewDidLoaded()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        presenter?.viewWillAppear()
-//    }
-    
     //MARK: - Functions
     private func settupView() {
         view.backgroundColor = .background

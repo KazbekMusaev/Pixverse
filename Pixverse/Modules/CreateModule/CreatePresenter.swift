@@ -12,7 +12,6 @@ protocol CreatePresenterProtocol: AnyObject {
     func goToTextToVideo()
     func goToImgAndTextToVideo()
     func goToSeeAll(_ category: [TemplatesModel])
-    func getTemplates(_ model: [TemplatesModel])
     
     func startLoadData()
     func showTemplates(_ model: [TemplatesModel])
@@ -44,17 +43,15 @@ extension CreatePresenter: CreatePresenterProtocol {
     }
     
     func showError(_ errorText: String) {
-        print(errorText)
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.showErrorLoad(errorText)
+        }
     }
     
     func showTemplates(_ model: [TemplatesModel]) {
         DispatchQueue.main.async { [weak self] in
             self?.view?.finishLoadData(model)
         }
-    }
-    
-    func getTemplates(_ model: [TemplatesModel]) {
-        router.pushToSeeAll(model)
     }
     
     func goToSeeAll(_ category: [TemplatesModel]) {
@@ -70,7 +67,6 @@ extension CreatePresenter: CreatePresenterProtocol {
     }
     
     func viewDidLoaded() {
-        print("CreatePresenter -> View did loaded")
         view?.showInformations()
     }
 }

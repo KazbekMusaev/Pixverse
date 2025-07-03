@@ -219,7 +219,7 @@ extension MineView: MineViewProtocol {
         allVideoLabel.text = "All videos (\(model.count))"
         
         favoritesModel = model.filter({ $0.favorite })
-        favoriteVideoLabel.text = "My favorites (\(favoritesModel.count)"
+        favoriteVideoLabel.text = "My favorites (\(favoritesModel.count))"
         
         savedVideoCollectionView.reloadData()
     }

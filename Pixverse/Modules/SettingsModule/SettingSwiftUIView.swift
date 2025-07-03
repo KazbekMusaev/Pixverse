@@ -78,6 +78,7 @@ struct SettingSwiftUIView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color.background)
+            .preferredColorScheme(.dark)
         }
     }
 }

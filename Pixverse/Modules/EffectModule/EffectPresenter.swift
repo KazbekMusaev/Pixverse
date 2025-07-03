@@ -46,7 +46,9 @@ extension EffectPresenter: EffectPresenterProtocol {
     }
     
     func getError(errorText: String) {
-        print(errorText)
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.getError(errorText)
+        }
     }
     
     func imageIsSelect(templateId: String, image: Data) {

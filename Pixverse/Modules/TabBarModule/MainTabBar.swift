@@ -18,6 +18,7 @@ final class MainTabBar: UITabBarController {
         super.viewDidLoad()
         
         let createVC = CreateRouter.build()
+        createVC.tabBarItem.image = UIImage(systemName: "leaf.circle.fill")
         createVC.tabBarItem.title = "Create"
         let mineVC = MineRouter.build()
         mineVC.tabBarItem.title = "Mine"

@@ -190,9 +190,9 @@ extension CreateView: CreateViewProtocol {
     func tapToSeeAllBtn(_ numberOfSection: Int) {
         switch numberOfSection {
         case 0:
-            presenter?.goToSeeAll("Trending")
+            presenter?.goToSeeAll(popularEffects)
         default:
-            presenter?.goToSeeAll("All")
+            presenter?.goToSeeAll(allEffects)
         }
     }
     

@@ -83,9 +83,9 @@ struct SettingSwiftUIView: View {
 }
 
 
-#Preview {
-    SettingSwiftUIView()
-}
+//#Preview {
+//    SettingSwiftUIView()
+//}
 
 struct SettingsBtn: View {
     let isSystemPhoto: Bool

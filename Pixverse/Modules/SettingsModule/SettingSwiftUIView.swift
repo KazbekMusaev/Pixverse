@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct SettingSwiftUIView: View {
-    @State private var notificationsEnabled = false
-    @State private var cacheSize: String = "5 MB"
-    @State private var notificationIsOn: Bool = false
+    @ObservedObject var viewModel: SettingViewModel
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -37,12 +35,12 @@ struct SettingSwiftUIView: View {
                 .padding(.top, 28)
                 
                 SettingsBtn(isSystemPhoto: false, image: "sparklesWithGradient", text: "Upgrade plan") {
-                    print("Upgrade plan taped")
+                    viewModel.presenter?.upgradePlunTaped()
                 }
                 .padding(.horizontal, 16)
                 
                 Button {
-                    notificationIsOn.toggle()
+                    viewModel.notificationIsOn.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "bell")
@@ -51,9 +49,9 @@ struct SettingSwiftUIView: View {
                             .foregroundStyle(.labelPrimary)
                             .font(.system(size: 17))
                         Spacer()
-                        Toggle("", isOn: $notificationIsOn)
+                        Toggle("", isOn: $viewModel.notificationIsOn)
                     }
-                    .padding(.vertical, 12)
+                    .padding(.vertical, 8)
                     .padding(.horizontal, 12)
                 }
                 .background(
@@ -73,13 +71,13 @@ struct SettingSwiftUIView: View {
                             .foregroundStyle(.labelPrimary)
                             .font(.system(size: 17))
                         Spacer()
-                        Text(cacheSize)
+                        Text(viewModel.cacheSize)
                             .foregroundStyle(.labelPrimary)
                             .font(.system(size: 17))
                         Image(systemName: "chevron.right")
                             .foregroundStyle(Color.labelQuaternary)
                     }
-                    .padding()
+                    .padding(12)
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 10)
@@ -160,7 +158,7 @@ struct SettingsBtn: View {
                 Image(systemName: "chevron.right")
                     .foregroundStyle(Color.labelQuaternary)
             }
-            .padding()
+            .padding(12)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .foregroundStyle(Color.backgroundPrimaryAlpha)

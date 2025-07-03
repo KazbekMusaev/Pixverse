@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+protocol PaywallInteractorProtocol {
+    
+}
+
+final class PaywallInteractor: PaywallInteractorProtocol {
+    
+    weak var presenter: PaywallPresenterProtocol?
+    
+}

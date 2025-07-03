@@ -10,9 +10,13 @@ import SwiftUI
 
 final class SettingHostingView: UIViewController {
     
+    weak var presenter: SettingsPresenterProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let swiftUIView = SettingSwiftUIView()
+        let viewModel = SettingViewModel()
+        viewModel.presenter = presenter
+        let swiftUIView = SettingSwiftUIView(viewModel: viewModel)
         let hostingController = UIHostingController(rootView: swiftUIView)
         addChild(hostingController)
         view.addSubview(hostingController.view)

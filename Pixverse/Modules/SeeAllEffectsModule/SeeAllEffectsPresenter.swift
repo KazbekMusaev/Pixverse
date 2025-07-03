@@ -9,6 +9,7 @@ import Foundation
 
 protocol SeeAllEffectsPresenterProtocol: AnyObject {
     func viewDidLoaded()
+    func needPopVC()
 }
 
 final class SeeAllEffectsPresenter {
@@ -27,6 +28,10 @@ final class SeeAllEffectsPresenter {
 }
 
 extension SeeAllEffectsPresenter: SeeAllEffectsPresenterProtocol {
+    func needPopVC() {
+        router.popVC()
+    }
+    
     func viewDidLoaded() {
         view?.showInformation()
     }

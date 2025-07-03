@@ -22,7 +22,8 @@ final class CreateRouter: CreateRouterProtocol {
     }
     
     func pushToSeeAll(_ model: [TemplatesModel]) {
-        let vc = SeeAllEffectsRouter.build()
+        guard let presenter else { return }
+        let vc = SeeAllEffectsRouter.build(delegate: presenter, model: model)
         viewController?.navigationController?.pushViewController(vc, animated: true)
     }
     

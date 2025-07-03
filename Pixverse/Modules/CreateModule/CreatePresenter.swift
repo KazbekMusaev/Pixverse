@@ -11,7 +11,7 @@ protocol CreatePresenterProtocol: AnyObject {
     func viewDidLoaded()
     func goToTextToVideo()
     func goToImgAndTextToVideo()
-    func goToSeeAll(_ category: String)
+    func goToSeeAll(_ category: [TemplatesModel])
     func getTemplates(_ model: [TemplatesModel])
     
     func startLoadData()
@@ -57,8 +57,8 @@ extension CreatePresenter: CreatePresenterProtocol {
         router.pushToSeeAll(model)
     }
     
-    func goToSeeAll(_ category: String) {
-        interactor.getTemplatesByCategory(category)
+    func goToSeeAll(_ category: [TemplatesModel]) {
+        router.pushToSeeAll(category)
     }
     
     func goToImgAndTextToVideo() {

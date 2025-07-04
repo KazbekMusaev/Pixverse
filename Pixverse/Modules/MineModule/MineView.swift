@@ -34,12 +34,18 @@ final class MineView: UIViewController {
     private func settupView() {
         view.backgroundColor = .background
         
+        view.addSubview(mineView.view)
         view.addSubview(navBar)
         
         NSLayoutConstraint.activate([
             navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
+            
+            mineView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mineView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mineView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mineView.view.topAnchor.constraint(lessThanOrEqualTo: navBar.bottomAnchor),
         ])
     }
     
@@ -88,6 +94,12 @@ final class MineView: UIViewController {
     
     //MARK: - View elements
     private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Mine")
+    
+    private lazy var mineView: UIViewController = {
+        let vc = MineHostingView()
+        vc.presenter = presenter
+        return vc
+    }()
     
     private lazy var savedVideoCollectionView: UICollectionView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -209,14 +221,14 @@ extension MineView: MineViewProtocol {
     
     
     func reloadData(_ model: [VideoModel]) {
-        settupWithCollection()
-        self.model = model
-        allVideoLabel.text = "All videos (\(model.count))"
-        
-        favoritesModel = model.filter({ $0.favorite })
-        favoriteVideoLabel.text = "My favorites (\(favoritesModel.count))"
-        
-        savedVideoCollectionView.reloadData()
+//        settupWithCollection()
+//        self.model = model
+//        allVideoLabel.text = "All videos (\(model.count))"
+//        
+//        favoritesModel = model.filter({ $0.favorite })
+//        favoriteVideoLabel.text = "My favorites (\(favoritesModel.count))"
+//        
+//        savedVideoCollectionView.reloadData()
     }
     
     func showInformations() {
@@ -224,7 +236,7 @@ extension MineView: MineViewProtocol {
     }
     
     func dataIsEmpty() {
-        settupEmptyView()
+//        settupEmptyView()
     }
 }
 

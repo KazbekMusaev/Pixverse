@@ -98,4 +98,30 @@ final class VideoLoader {
         
         view.layer.addSublayer(playerLayer)
     }
+    
+    
+    static func generateThumbnailSUI(from filename: String) -> UIImage? {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        
+        let videoURL = documentsDirectory.appendingPathComponent(filename + ".mp4")
+        
+        guard FileManager.default.fileExists(atPath: videoURL.path) else {
+            print("Video file not found")
+            return nil
+        }
+        
+        let asset = AVAsset(url: videoURL)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+        
+        do {
+            let cgImage = try imageGenerator.copyCGImage(at: .zero, actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        } catch {
+            print("Thumbnail generation error: \(error)")
+            return nil
+        }
+    }
 }

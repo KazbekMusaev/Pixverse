@@ -322,4 +322,76 @@ final class ComponentBuilder {
          
         return btn
     }
+    
+    
+    
+    ///Метод для получения кнопок в пейволе
+    static func getPaywallPricesBtn(model: PriceModel, imageView: UIImageView) -> UIButton {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.layer.cornerRadius = 10
+        btn.layer.borderWidth = 1
+        btn.layer.borderColor = UIColor.separatorPrimary.cgColor
+        btn.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        btn.backgroundColor = .clear
+        btn.clipsToBounds = true
+        
+        
+        if model.onSale {
+            let salePriseLabel = UILabel()
+            salePriseLabel.translatesAutoresizingMaskIntoConstraints = false
+            salePriseLabel.font = .systemFont(ofSize: 11, weight: .semibold) // SF PRO
+            salePriseLabel.textColor = .labelPrimary
+            salePriseLabel.backgroundColor = .backgroundQuaternary
+            salePriseLabel.text = "SAVE \(model.discountPersent)%"
+            salePriseLabel.textAlignment = .center
+            
+            btn.addSubview(salePriseLabel)
+            
+            NSLayoutConstraint.activate([
+                salePriseLabel.heightAnchor.constraint(equalToConstant: 24),
+                salePriseLabel.widthAnchor.constraint(equalToConstant: 82),
+                salePriseLabel.trailingAnchor.constraint(equalTo: btn.trailingAnchor),
+                salePriseLabel.topAnchor.constraint(equalTo: btn.topAnchor)
+            ])
+            
+            DispatchQueue.main.async {
+                salePriseLabel.roundCorners([.bottomLeft], radius: 10)
+            }
+        }
+        
+        
+        btn.addSubview(imageView)
+        
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.font = .systemFont(ofSize: 17, weight: .regular) // SF PRO
+        title.textColor = .labelPrimary
+        title.textAlignment = .left
+        title.text = "Just $\(model.price) / \(model.period)"
+        
+        let description = UILabel()
+        description.translatesAutoresizingMaskIntoConstraints = false
+        description.numberOfLines = 1
+        description.textColor = .labelQuaternary
+        description.font = .systemFont(ofSize: 12) // SF PRO
+        description.text = "Auto renewable. Cancel anytime."
+        
+        
+        btn.addSubview(title)
+        btn.addSubview(description)
+        
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: btn.leadingAnchor, constant: 12),
+            imageView.centerYAnchor.constraint(equalTo: btn.centerYAnchor),
+            
+            title.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
+            title.topAnchor.constraint(equalTo: btn.topAnchor, constant: 8),
+            
+            description.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
+            description.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 2)
+        ])
+        
+        return btn
+    }
 }

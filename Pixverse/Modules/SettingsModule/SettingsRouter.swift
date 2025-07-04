@@ -8,10 +8,17 @@
 import UIKit
 
 protocol SettingsRouterProtocol: AnyObject {
-    
+    func pushToPaywall()
 }
 
 final class SettingsRouter: SettingsRouterProtocol {
+    
+    func pushToPaywall() {
+        TabBarManager.shared.hide()
+        let vc = PaywallRouter.build()
+        viewController?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     weak var viewController: SettingsView?
     weak var presenter: SettingsPresenterProtocol?
@@ -36,4 +43,6 @@ final class SettingsRouter: SettingsRouterProtocol {
         
         return navController
     }
+    
+    
 }

@@ -8,84 +8,130 @@
 import SwiftUI
 
 struct SettingSwiftUIView: View {
-    @State private var notificationsEnabled = false
-    @State private var cacheSize: String = "5 MB"
-    @State private var notificationIsOn: Bool = false
+    @ObservedObject var viewModel: SettingViewModel
     
     var body: some View {
-        VStack {
-            Form {
-                Section(header: SectionLabel(text: "Support us")) {
-                    SettingsBtn(isSystemPhoto: true, image: "star", text: "Rate app") {
-                        print("")
-                    }
-                    SettingsBtn(isSystemPhoto: true, image: "square.and.arrow.up", text: "Share with friends") {
-                        print("")
-                    }
+        ScrollView(showsIndicators: false) {
+            VStack {
+                HStack {
+                    SectionLabel(text: "Support us")
+                    Spacer()
                 }
-                Section(header: SectionLabel(text: "Purchases & Actions")) {
-                    SettingsBtn(isSystemPhoto: false, image: "sparklesWithGradient", text: "Upgrade plan") {
-                        print("")
-                    }
-                    Button {
-                        notificationIsOn.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "bell")
-                                .foregroundStyle(.accentPrimary)
-                            Text("Notifications")
-                                .foregroundStyle(.labelPrimary)
-                                .font(.system(size: 17))
-                            Spacer()
-                            Toggle("", isOn: $notificationIsOn)
-                        }
-                    }
-                    
-                    Button {
-                        print("clear cashe")
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash")
-                                .foregroundStyle(.accentPrimary)
-                            Text("Clear cache")
-                                .foregroundStyle(.labelPrimary)
-                                .font(.system(size: 17))
-                            Spacer()
-                            Text(cacheSize)
-                                .foregroundStyle(.labelPrimary)
-                                .font(.system(size: 17))
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(Color.labelQuaternary)
-                        }
-                    }
-                    
-                    SettingsBtn(isSystemPhoto: true, image: "arrow.clockwise.icloud", text: "Restore purchases") {
-                        print("")
-                    }
+                .padding(.leading, 16)
+                SettingsBtn(isSystemPhoto: true, image: "star", text: "Rate us") {
+                    print("rate us taped")
                 }
-                Section(header: SectionLabel(text: "Info & legal")) {
-                    SettingsBtn(isSystemPhoto: true, image: "text.bubble", text: "Contact us") {
-                        print("")
-                    }
-                    SettingsBtn(isSystemPhoto: true, image: "folder.badge.person.crop", text: "Privacy Policy") {
-                        print("")
-                    }
-                    SettingsBtn(isSystemPhoto: true, image: "doc.text", text: "Usage Policy") {
-                        print("")
-                    }
-
+                .padding(.horizontal, 16)
+                SettingsBtn(isSystemPhoto: true, image: "square.and.arrow.up", text: "Share with friends") {
+                    print("share taped taped")
                 }
+                .padding(.horizontal, 16)
+                
+                HStack {
+                    SectionLabel(text: "Purchases & Actions")
+                    Spacer()
+                }
+                .padding(.leading, 16)
+                .padding(.top, 28)
+                
+                SettingsBtn(isSystemPhoto: false, image: "sparklesWithGradient", text: "Upgrade plan") {
+                    viewModel.presenter?.upgradePlunTaped()
+                }
+                .padding(.horizontal, 16)
+                
+                Button {
+                    viewModel.notificationIsOn.toggle()
+                } label: {
+                    HStack {
+                        Image(systemName: "bell")
+                            .foregroundStyle(.accentPrimary)
+                        Text("Notifications")
+                            .foregroundStyle(.labelPrimary)
+                            .font(.system(size: 17))
+                        Spacer()
+                        Toggle("", isOn: $viewModel.notificationIsOn)
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundStyle(Color.backgroundPrimaryAlpha)
+                )
+                .padding(.horizontal, 16)
+                
+                
+                Button {
+                    print("clear cashe")
+                } label: {
+                    HStack {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.accentPrimary)
+                        Text("Clear cache")
+                            .foregroundStyle(.labelPrimary)
+                            .font(.system(size: 17))
+                        Spacer()
+                        Text(viewModel.cacheSize)
+                            .foregroundStyle(.labelPrimary)
+                            .font(.system(size: 17))
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(Color.labelQuaternary)
+                    }
+                    .padding(12)
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundStyle(Color.backgroundPrimaryAlpha)
+                )
+                .padding(.horizontal, 16)
+                
+                SettingsBtn(isSystemPhoto: true, image: "arrow.clockwise.icloud", text: "Restore purchases") {
+                    print("Restore purchases taped")
+                }
+                .padding(.horizontal, 16)
+                
+                HStack {
+                    SectionLabel(text: "Info & legal")
+                    Spacer()
+                }
+                .padding(.leading, 16)
+                .padding(.top, 28)
+                
+                SettingsBtn(isSystemPhoto: true, image: "text.bubble", text: "Contact us") {
+                    print("Contact us taped")
+                }
+                .padding(.horizontal, 16)
+                
+                SettingsBtn(isSystemPhoto: true, image: "folder.badge.person.crop", text: "Privacy Policy") {
+                    print("Privacy Policy taped")
+                }
+                .padding(.horizontal, 16)
+                
+                SettingsBtn(isSystemPhoto: true, image: "doc.text", text: "Usage Policy") {
+                    print("Usage Policy taped")
+                }
+                .padding(.horizontal, 16)
+                
+                HStack {
+                    Spacer()
+                    Text("App Version: 1.0.0")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.labelTertiary)
+                    Spacer()
+                }
+                .padding(.top, 24)
+                
+                VStack {}
+                .frame(height: 116)
+                .frame(maxWidth: .infinity)
+                .background(Color.background)
             }
-            .scrollContentBackground(.hidden)
-            .background(Color.background)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .background(Color.background)
+        .padding(.top, 116)
     }
 }
-
-
-//#Preview {
-//    SettingSwiftUIView()
-//}
 
 struct SettingsBtn: View {
     let isSystemPhoto: Bool
@@ -112,6 +158,11 @@ struct SettingsBtn: View {
                 Image(systemName: "chevron.right")
                     .foregroundStyle(Color.labelQuaternary)
             }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color.backgroundPrimaryAlpha)
+            )
         }
     }
 }
@@ -121,6 +172,6 @@ struct SectionLabel: View {
     var body: some View {
         Text(text)
             .foregroundStyle(Color.labelSecondary)
-            .font(.system(size: 14, weight: .semibold))
+            .font(.system(size: 17, weight: .semibold))
     }
 }

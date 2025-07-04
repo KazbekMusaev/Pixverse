@@ -61,6 +61,7 @@ final class CoreManager {
         if let posts = try? persistentContainer.viewContext.fetch(post) {
             self.posts = posts
         }
+        NotificationCenter.default.post(name: NSNotification.Name("reload"), object: nil, userInfo: nil)
     }
     
     func isPostSavedInCoreData() -> Bool {

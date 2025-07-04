@@ -11,6 +11,7 @@ protocol CreateViewProtocol: AnyObject {
     func showInformations()
     func tapToSeeAllBtn(_ numberOfSection: Int)
     func finishLoadData(_ model: [TemplatesModel])
+    func showErrorLoad(_ errorText: String)
 }
 
 final class CreateView: UIViewController {
@@ -181,6 +182,18 @@ final class CreateView: UIViewController {
 }
 
 extension CreateView: CreateViewProtocol {
+    func showErrorLoad(_ errorText: String) {
+        let alertAction = UIAlertController(title: "Network error!", message: errorText, preferredStyle: .alert)
+        let cancelBtn = UIAlertAction(title: "Cancel", style: .default)
+        let tryAgainBtn = UIAlertAction(title: "Try Again", style: .cancel) { [weak self] _ in
+//            self.presenter?.saveBtnTaped()
+            self?.presenter?.startLoadData()
+        }
+        alertAction.addAction(cancelBtn)
+        alertAction.addAction(tryAgainBtn)
+        self.present(alertAction, animated: true)
+    }
+    
     func finishLoadData(_ model: [TemplatesModel]) {
         allEffects = model
         popularEffects = allEffects.filter({ $0.category == "Trending" })

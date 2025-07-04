@@ -13,17 +13,20 @@ protocol EffectViewProtocol: AnyObject {
     func showImagePicker(mediaType: MediaType)
     func showCreatingAnimations()
     func stopCreatingAnimations()
+    func getError(_ errorText: String)
 }
 
 final class EffectView: UIViewController {
     
     var presenter: EffectPresenterProtocol?
     var model: TemplatesModel?
+    var selectedImageData: Data?
     
     private lazy var imagePicker = ImagePickerManager(viewController: self) { [weak self] image in
         guard let self, let image, let model else { return }
         guard let data = image.jpegData(compressionQuality: 0.2) else { return }
         presenter?.imageIsSelect(templateId: String(model.templateId), image: data)
+        self.selectedImageData = data
     }
     
     //MARK: - View life cycle
@@ -181,6 +184,19 @@ final class EffectView: UIViewController {
 }
 
 extension EffectView: EffectViewProtocol {
+    func getError(_ errorText: String) {
+        stopCreatingAnimations()
+        let alertAction = UIAlertController(title: "Network error!", message: errorText, preferredStyle: .alert)
+        let cancelBtn = UIAlertAction(title: "Cancel", style: .default)
+        let tryAgainBtn = UIAlertAction(title: "Try Again", style: .cancel) { [weak self] _ in
+            guard let self, let selectedImageData, let model else { return }
+            self.presenter?.imageIsSelect(templateId: String(model.templateId), image: selectedImageData)
+        }
+        alertAction.addAction(cancelBtn)
+        alertAction.addAction(tryAgainBtn)
+        self.present(alertAction, animated: true)
+    }
+    
     func stopCreatingAnimations() {
         creatingLoadView.removeFromSuperview()
     }

@@ -29,7 +29,7 @@ final class EffectInteractor: EffectInteractorProtocol {
                 self?.statusId = String(success.videoId)
                 self?.presenter?.getSuccessResponse()
             case .failure(let failure):
-                print(failure.localizedDescription)
+                self?.presenter?.getError(errorText: failure.localizedDescription)
             }
         }
     }

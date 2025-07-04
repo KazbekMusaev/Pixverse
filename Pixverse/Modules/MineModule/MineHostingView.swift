@@ -1,22 +1,22 @@
 //
-//  HostingVC.swift
+//  MineHostingView.swift
 //  Pixverse
 //
-//  Created by KazbekMusaev on 02.07.2025.
+//  Created by KazbekMusaev on 04.07.2025.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
-final class SettingHostingView: UIViewController {
+final class MineHostingView: UIViewController {
     
-    weak var presenter: SettingsPresenterProtocol?
+    weak var presenter: MinePresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let viewModel = SettingViewModel()
+        let viewModel = MineViewModel()
         viewModel.presenter = presenter
-        let swiftUIView = SettingSwiftUIView(viewModel: viewModel)
+        let swiftUIView = MineSwiftUIView(viewModel: viewModel)
         let hostingController = UIHostingController(rootView: swiftUIView)
         addChild(hostingController)
         view.addSubview(hostingController.view)
@@ -26,7 +26,7 @@ final class SettingHostingView: UIViewController {
         NSLayoutConstraint.activate([
             hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         

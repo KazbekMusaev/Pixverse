@@ -9,6 +9,9 @@ import Foundation
 
 protocol SettingsPresenterProtocol: AnyObject {
     func viewDidLoaded()
+    
+    func upgradePlunTaped()
+    
 }
 
 final class SettingsPresenter {
@@ -26,8 +29,11 @@ final class SettingsPresenter {
 }
 
 extension SettingsPresenter: SettingsPresenterProtocol {
+    func upgradePlunTaped() {
+        router.pushToPaywall()
+    }
+    
     func viewDidLoaded() {
-        print("SettingsPresenter -> view did loaded")
         view?.showInformations()
     }
 }

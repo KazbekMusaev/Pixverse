@@ -44,7 +44,11 @@ final class SettingsView: UIViewController {
     //MARK: - View elements
     private lazy var navBar = ComponentBuilder.getCustomNavigationBar(title: "Settings")
     
-    private lazy var settingView = SettingHostingView()
+    private lazy var settingView: UIViewController = {
+        let vc = SettingHostingView()
+        vc.presenter = presenter
+        return vc
+    }()
     
     //MARK: - Actions
 
